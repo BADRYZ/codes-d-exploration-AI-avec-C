@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1713053024 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\premiertp\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"graphemat.h"
+	"liregraphe.h"
+
+1713050643 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\premiertp\graphemat.h
+	<limits.h>
+
+1713050219 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\premiertp\liregraphe.h
+
+1713051143 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\premiertp\graphemat.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"graphemat.h"
+

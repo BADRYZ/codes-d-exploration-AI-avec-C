@@ -239,13 +239,13 @@ int comparerPersonne (Objet* objet1, Objet* objet2) {
 int menu () {
   printf ("\n\nGESTION D'UNE LISTE DE PERSONNES\n\n");
   printf ("0 - Fin\n");
-  printf ("1 - Insertion   en t�te de liste\n");
+  printf ("1 - Insertion   en tete de liste\n");
   printf ("2 - Insertion   en fin  de liste\n");
-  printf ("3 - Retrait     en t�te de liste\n");
+  printf ("3 - Retrait     en tete de liste\n");
   printf ("4 - Retrait     en fin  de liste\n");
-  printf ("5 - Retrait     d'un �l�ment � partir de son nom\n");
+  printf ("5 - Retrait     d'un element a partir de son nom\n");
   printf ("6 - Parcours    de la liste\n");
-  printf ("7 - Recherche   d'un �l�ment � partir de son nom\n");
+  printf ("7 - Recherche   d'un element a partir de son nom\n");
   printf ("8 - Destruction de la liste\n");
   printf ("\n");
   printf ("Votre choix ? ");
@@ -265,18 +265,18 @@ int  main () {
       fini = vrai;
       break;
     case 1 : {
-	  printf ("Nom de la personne � cr�er ? ");
+	  printf ("Nom de la personne a creer ? ");
 	  ch15 nom; scanf ("%s", nom);
-      printf ("Pr�nom de la personne � cr�er ? ");
+      printf ("Prenom de la personne a creer ? ");
       ch15 prenom; scanf ("%s", prenom);
       Personne* nouveau = creerPersonne(nom, prenom);
 
       insererEnTeteDeListe (lp, nouveau);
       } break;
     case 2 : {
-	  printf ("Nom de la personne � cr�er ? ");
+	  printf ("Nom de la personne a creer ? ");
 	  ch15 nom; scanf ("%s", nom);
-      printf ("Pr�nom de la personne � cr�er ? ");
+      printf ("Prenom de la personne a creer ? ");
       ch15 prenom; scanf ("%s", prenom);
       Personne* nouveau = creerPersonne(nom, prenom);
 
@@ -285,7 +285,7 @@ int  main () {
     case 3 : {
       Personne* extrait = (Personne*) extraireEnTeteDeListe (lp);
       if (extrait != NULL) {
-        printf ("�l�ment %s %s extrait en t�te de liste",
+        printf ("element %s %s extrait en tete de liste",
                 extrait->nom, extrait->prenom);
       } else {
         printf ("Liste vide");
@@ -294,31 +294,31 @@ int  main () {
     case 4 : {
       Personne* extrait = (Personne*) extraireEnFinDeListe (lp);
       if (extrait != NULL) {
-        printf ("�l�ment %s %s extrait en fin de liste",
+        printf ("element %s %s extrait en fin de liste",
                 extrait->nom, extrait->prenom);
       } else {
         printf ("Liste vide");
       }
       } break;
     case 5 : {
-      printf ("Nom de la personne � extraire ? ");
+      printf ("Nom de la personne a extraire ? ");
       ch15 nom; scanf ("%s", nom);
       Personne* cherche = creerPersonne (nom, "?");
       Personne* pp      = (Personne*) chercherUnObjet (lp, cherche);
       if (extraireUnObjet (lp, pp)) {
-        printf ("�l�ment %s %s extrait de la liste", pp->nom, pp->prenom);
+        printf ("element %s %s extrait de la liste", pp->nom, pp->prenom);
       }
       } break;
     case 6:
       listerListe (lp);
       break;
     case 7 : {
-      printf ("Nom de la personne recherch�e ? ");
+      printf ("Nom de la personne recherchee ? ");
       ch15 nom; scanf ("%s", nom);
       Personne* cherche = creerPersonne (nom, "?");
       Personne* pp      = (Personne*) chercherUnObjet (lp, cherche);
       if (pp != NULL) {
-        printf ("%s %s trouv�e dans la liste\n", pp->nom, pp->prenom);
+        printf ("%s %s trouvee dans la liste\n", pp->nom, pp->prenom);
       } else {
         printf ("%s inconnue dans la liste\n", nom);
       }

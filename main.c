@@ -560,6 +560,63 @@ void parcoursLargeurD(GrapheMat* graphe){
     noeudsVisite=0;
 }
 
+// profendeur limite
+static booleen trouve =false;
+static void profendeurLimite(GrapheMat* graphe ,int k,char but[],int limite){
+
+if(!trouve){
+    noeudsVisite++;
+    int nMax=graphe->nMax;
+    if(strcasecmp(graphe->nomS[k],but)==0){
+        printf("%s",graphe->nomS[k]);
+        trouve=vrai;
+        return;
+    }
+    else if(limite<=0) {
+        printf("%s",graphe->nomS[k]);
+        graphe->marque[k]=vrai;
+        return;
+    }
+    else {
+        if(limite>0){
+            printf("%s",graphe->nomS[k]);
+            graphe->marque[k]=vrai;
+            for(int i=0;i>graphe->n;i++){
+                if((graphe->element[k*nMax+i]==vrai)&&!graphe->marque[i]&&!trouve){
+                    profendeurLimite(graphe,i,but,limite-1);
+                }
+            }
+        }
+    }
+}
+}
+void parcoursProfendeurLimite(GrapheMat* graphe){
+razMarque(graphe);
+Liste* li=creerListe(0, NULL, NULL);
+char str[20];
+printf("=> entre le but ");
+scanf("%s",str);
+int limite;
+printf("=> entre la limite ");
+scanf("%s",&limite);
+for(int i=0;i<graphe->n;i++){
+    if(!graphe->marque[i]){
+        profendeurLimite(graphe,i,str,limite);
+        break;
+    }
+
+}
+if (trouve==faux){
+    printf("\n le but est introuvable\n");
+
+}
+else {
+    printf("\n => le nombre de noeuds visites :%d",noeudsVisite);
+}
+noeudsVisite=0;
+trouve=faux;
+}
+
 //**** fin include TP1
 
 int menu () {
@@ -580,6 +637,7 @@ int menu () {
   printf ("8  - Floyd \n");
   printf (" ***** EXPLORATION ***** \n");
   printf ("9  -  exploration en largeur d'abord \n");
+  printf ("10  -  exploration en profendeur d'abord limitee\n");
   printf ("\n");
   printf ("Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -610,21 +668,21 @@ int main () {
    case 2: {  // cr�ation d�un graphe vide
       printf ("Nombre maximum de sommets ? ");
       int nMaxSom; scanf  ("%d", &nMaxSom);
-      printf ("0) non valu�; 1) graphe valu� ? ");
+      printf ("0) non value; 1) graphe value ? ");
       int value; scanf ("%d", &value);
 
       graphe = creerGrapheMat (nMaxSom, value);
 
     } break;
     case 3: {  // ajouter un sommet
-      printf ("Nom du sommet � ins�rer ? ");
+      printf ("Nom du sommet a inserer ? ");
       NomSom somD; scanf  ("%s", somD);
       ajouterUnSommet (graphe, somD);
     } break;
     case 4: {  // ajouter un arc
-      printf ("Nom du sommet de d�part ? ");
+      printf ("Nom du sommet de depart ? ");
       NomSom somD; scanf  ("%s", somD);
-      printf ("Nom du sommet d'arriv�e ? ");
+      printf ("Nom du sommet d'arrivee ? ");
       NomSom somA; scanf  ("%s", somA);
       int cout;
       if (graphe->value) {
@@ -655,6 +713,10 @@ int main () {
     case 9:
         printf("exploration en largeur d'abord ");
         parcoursLargeurD(graphe);
+        break;
+    case 10:
+        printf("exploration en profendeur d'abord limitee");
+        parcoursProfendeurLimite(graphe);
         break;
 
 

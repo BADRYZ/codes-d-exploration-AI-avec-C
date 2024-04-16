@@ -3,12 +3,6 @@
 #include <string.h>
 #include "graphemat.h"
 
-//include liste
-
-//fin include liste
-
-
-
 
 booleen  grapheDetruit = vrai;
 
@@ -218,7 +212,7 @@ void parcoursProfond (GrapheMat* graphe)
 
 
 
-////*********************************************
+////********************************************* includde le fichier liste
 typedef int  booleen;
 typedef void Objet;
 typedef struct element {
@@ -451,7 +445,9 @@ static void razMarque(GrapheMat* graphe){
         graphe->marque[i]=faux;
     }
 }
-//*********************
+//********************* fin include fichier liste
+
+//TP1
 // largeur d'abord
 static int largeurD(GrapheMat* graphe, Liste* li, int numSommet,char but[]){
 int nMax =graphe->nMax;
@@ -503,3 +499,63 @@ void parcoursLargeurD(GrapheMat* graphe){
     printf("\n => le nombre de noeuds visites :%d",noeudsVisite);
     noeudsVisite=0;
 }
+
+// profendeur limite
+static booleen trouve =false;
+static void profendeurLimite(GrapheMat* graphe ,int k,char but[],int limite){
+
+if(!trouve){
+    noeudsVisite++;
+    int nMax=graphe->nMax;
+    if(strcasecmp(graphe->nomS[k],but)==0){
+        printf("%s",graphe->nomS[k]);
+        trouve=vrai;
+        return;
+    }
+    else if(limite<=0) {
+        printf("%s",graphe->nomS[k]);
+        graphe->marque[k]=vrai;
+        return;
+    }
+    else {
+        if(limite>0){
+            printf("%s",graphe->nomS[k]);
+            graphe->marque[k]=vrai;
+            for(int i=0;i>graphe->n;i++){
+                if((graphe->element[k*nMax+i]==vrai)&&!graphe->marque[i]&&!trouve){
+                    profendeurLimite(graphe,i,but,limite-1);
+                }
+            }
+        }
+    }
+}
+}
+void parcoursProfendeurLimite(GrapheMat* graphe){
+razMarque(graphe);
+Liste* li=creerListe(0, NULL, NULL);
+char str[20];
+printf("=> entre le but ");
+scanf("%s",str);
+int limite;
+printf("=> entre la limite ");
+scanf("%s",&limite);
+for(int i=0;i<graphe->n;i++){
+    if(!graphe->marque[i]){
+        profendeurLimite(graphe,i,str,limite);
+        break;
+    }
+
+}
+if (trouve==faux){
+    printf("\n le but est introuvable\n");
+
+}
+else {
+    printf("\n => le nombre de noeuds visites :%d",noeudsVisite);
+}
+noeudsVisite=0;
+trouve=faux;
+
+
+}
+

@@ -25,9 +25,18 @@ void       ajouterUnSommet    (GrapheMat* graphe, NomSom nom);
 void       ajouterUnArc       (GrapheMat* graphe, NomSom somD, NomSom somA, int cout);
 void       ecrireGraphe       (GrapheMat* graphe);
 
+//exploration deja defenie
+static void profondeur (GrapheMat* graphe, int numSommet);
 void       parcoursProfond    (GrapheMat* graphe);
 
+// implementer par moi
+static void ecrireEtape (Matrice a, Matrice p, int k, int ns, int nMax);
+//FLOYD
+static void initFloyd (GrapheMat* graphe, Matrice* a, Matrice* p);
 void       floyd              (GrapheMat* graphe);
 
-
+//TP1
+//exploration
+//static int largeurD(GrapheMat* graphe, Liste* li, int numSommet,char but[]);
 void parcoursLargeurD(GrapheMat* graphe);
+void parcoursProfendeurLimite(GrapheMat* graphe);

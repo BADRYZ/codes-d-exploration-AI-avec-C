@@ -17,19 +17,20 @@
 	<string.h>
 	"graphemat.h"
 
-1713296284 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.cpp
+1713310479 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"graphemat.h"
 
-1713294592 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.h
+1713310326 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.h
 	<limits.h>
 
-1713294903 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\main.c
+1713310462 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<stdbool.h>
 	"graphemat.h"
 	"liregraphe.h"
 	"liste.h"

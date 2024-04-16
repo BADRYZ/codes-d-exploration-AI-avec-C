@@ -1,5 +1,6 @@
 #include <limits.h>
 
+
 typedef int  booleen;
 #define faux 0
 #define vrai 1
@@ -28,3 +29,5 @@ void       parcoursProfond    (GrapheMat* graphe);
 
 void       floyd              (GrapheMat* graphe);
 
+
+void parcoursLargeurD(GrapheMat* graphe);

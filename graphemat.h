@@ -37,6 +37,6 @@ void       floyd              (GrapheMat* graphe);
 
 //TP1
 //exploration
-//static int largeurD(GrapheMat* graphe, Liste* li, int numSommet,char but[]);
 void parcoursLargeurD(GrapheMat* graphe);
 void parcoursProfendeurLimite(GrapheMat* graphe);
+void parcoursIterativeEnprofendeur(GrapheMat* graphe);

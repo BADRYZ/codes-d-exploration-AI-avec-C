@@ -616,6 +616,69 @@ else {
 noeudsVisite=0;
 trouve=faux;
 }
+//parcours iterative en pr
+void profondeurIteretif(GrapheMat* graphe,int numSommet,int numNiveau,char but[]){
+if(!trouve){
+    noeudsVisite++;
+    if(strcmp(graphe->nomS[numSommet],but)==0){
+        printf("\n => le but est trouve!:%s",but);
+        trouve=vrai;
+    }
+    else if (numNiveau==0){
+        printf("-> %s ",graphe->nomS[numSommet]);
+        graphe->marque[numSommet]=vrai;
+
+    }
+    else{
+        if(numNiveau>0){
+            int nMax=graphe->nMax;
+            graphe->marque[numSommet]=vrai;
+            printf(" -> %s ",graphe->nomS[numSommet]);
+            for(int i=0;i<graphe->n;i++){
+                if((graphe->element[numSommet*nMax+i]== vrai)&& !graphe->marque[i]){
+                    profondeurIteretif(graphe,i,numNiveau-1,but);
+                }
+            }
+        }
+    }
+}
+
+
+}
+void parcoursIterativeEnprofendeur(GrapheMat* graphe){
+    char str[20];
+    int numNiveau;
+    int niveau;
+    printf("entrer le but");
+    scanf("%s",str);
+    printf("entrer le max de niveau");
+    scanf("%d",&niveau);
+    razMarque(graphe);
+    Liste* li=creerListe(0,NULL,NULL);
+    printf("chemin suivi par le parcours:");
+    for(numNiveau=0;numNiveau<=niveau;numNiveau++){
+        if(trouve){
+            break;
+        }
+        printf("limite %d",numNiveau);
+        razMarque(graphe);
+        for(int i=0;i<graphe->n;i++){
+            if(!graphe->marque[i]){
+                profondeurIteretif(graphe,i,numNiveau,str);
+                break;
+            }
+        }
+        printf("\n");
+    }
+    if(!trouve){
+        trouve=false;
+        printf("\n le noeud %s est introuvable",str);
+    }
+    printf("\nouds visites :%d",noeudsVisite);
+    noeudsVisite=0;
+    trouve=false;
+
+}
 
 //**** fin include TP1
 
@@ -638,6 +701,7 @@ int menu () {
   printf (" ***** EXPLORATION ***** \n");
   printf ("9  -  exploration en largeur d'abord \n");
   printf ("10  -  exploration en profendeur d'abord limitee\n");
+  printf ("11  -  Exploration iterative en profondeur\n");
   printf ("\n");
   printf ("Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -707,7 +771,7 @@ int main () {
         printf ("\nLes plus courts chemins\n\n");
           floyd (graphe);
       } else {
-        printf ("Graphe non valu�\n");
+        printf ("Graphe non value\n");
       }
       break;
     case 9:
@@ -717,6 +781,10 @@ int main () {
     case 10:
         printf("exploration en profendeur d'abord limitee");
         parcoursProfendeurLimite(graphe);
+        break;
+    case 11:
+        printf("Exploration iterative en profondeur");
+        parcoursIterativeEnprofendeur(graphe);
         break;
 
 

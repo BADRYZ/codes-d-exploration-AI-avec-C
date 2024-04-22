@@ -698,8 +698,10 @@ int menu () {
   printf ("7 - Parcours en profondeur d'un graphe\n");
   printf ("\n");
   printf ("8  - Floyd \n");
+  printf ("\n");
   printf (" ***** EXPLORATION ***** \n");
-  printf ("9  -  exploration en largeur d'abord \n");
+  printf ("\n");
+  printf ("9   -  exploration en largeur d'abord \n");
   printf ("10  -  exploration en profendeur d'abord limitee\n");
   printf ("11  -  Exploration iterative en profondeur\n");
   printf ("\n");

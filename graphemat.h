@@ -25,8 +25,7 @@ void       ajouterUnSommet    (GrapheMat* graphe, NomSom nom);
 void       ajouterUnArc       (GrapheMat* graphe, NomSom somD, NomSom somA, int cout);
 void       ecrireGraphe       (GrapheMat* graphe);
 
-//exploration deja defenie
-static void profondeur (GrapheMat* graphe, int numSommet);
+//exploration deja defenie avec des modif
 void       parcoursProfond    (GrapheMat* graphe);
 
 // implementer par moi

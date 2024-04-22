@@ -5,7 +5,7 @@
 #include "graphemat.h"
 #include "liregraphe.h"
 #include "liste.h"
-
+#define MAX_PATH_LENGTH 100
 static bool trouve = false;
 static int noeudsVisite = 0;
 typedef GrapheMat Graphe;
@@ -259,7 +259,7 @@ void floyd (GrapheMat* graphe)
         }
         ecrireEtape(a,p,k,graphe->n,nMax);
 }}
-static void Dprofondeur(GrapheMat *graphe, int numSommet, char but[]) {
+static void profondeur(GrapheMat *graphe, int numSommet, char but[]) {
 
     if (!trouve) {
         int nMax = graphe->nMax;
@@ -274,7 +274,7 @@ static void Dprofondeur(GrapheMat *graphe, int numSommet, char but[]) {
                     printf("->%s (Noeud but) ", but);
                     trouve = true;
                 }
-                Dprofondeur(graphe, i, but);
+                profondeur(graphe, i, but);
             }
         }
     }
@@ -291,7 +291,7 @@ void parcoursProfond(GrapheMat *graphe) {
 
     for (int i = 0; i < graphe->n; i++) {
         if (!graphe->marque[i])
-            Dprofondeur(graphe, i, str);
+            profondeur(graphe, i, str);
     }
     if (!trouve) {
 
@@ -719,6 +719,199 @@ void parcoursIterativeEnprofendeur(GrapheMat* graphe){
 
 //**** fin include TP1
 
+//cout uniforme
+void DinsererEnTeteDeListe(Liste* li, Objet* objet, Objet* priority)
+{
+    Element* nouveau = creerElement();
+
+    nouveau->reference = objet;
+    nouveau->priority = priority;
+    nouveau->suivant = li->premier;
+    li->premier = nouveau;
+    if (li->dernier == NULL)
+        li->dernier = nouveau;
+    li->nbElt++;
+}
+static void DinsererApres(Liste* li, Element* precedent, Objet* objet, Objet* priority)
+{
+    if (precedent == NULL) {
+        DinsererEnTeteDeListe(li, objet, priority);
+    }
+    else {
+        Element* nouveau = creerElement();
+        nouveau->reference = objet;
+
+        nouveau->priority = priority;
+        nouveau->suivant = precedent->suivant;
+        precedent->suivant = nouveau;
+        if (precedent == li->dernier)
+            li->dernier = nouveau;
+        li->nbElt++;
+    }
+}
+void DinsererEnFinDeListe(Liste* li, Objet* objet, Objet* priority)
+{
+    DinsererApres(li, li->dernier, objet, priority);
+}
+void DinsererEnOrdre(Liste* li, Objet* objet, Objet* priority)
+{
+    if (listeVide(li)) { // liste vide
+        DinsererEnTeteDeListe(li, objet, priority);
+        //printf ("insertion dans liste vide\n");
+    }
+    else {
+        Element* ptc = li->premier;
+        if (enOrdre(priority, ptc->priority, li->type == 1, li->comparer)) {
+            // insertion avant le premier élément
+            //printf ("insertion en tête de liste non vide\n");
+            DinsererEnTeteDeListe(li, objet, priority);
+        }
+        else { // insertion en milieu ou fin de liste
+            //printf ("insertion en milieu ou fin de liste non vide\n");
+            booleen trouve = faux;
+            Element* prec = NULL;
+            while (ptc != NULL && !trouve) {
+                prec = ptc;
+                ptc = ptc->suivant;
+                if (ptc != NULL)
+                    trouve = enOrdre(priority, ptc->priority, li->type == 1, li->comparer);
+            }
+            // insertion en milieu de liste ou fin de liste
+            DinsererApres(li, prec, objet, priority);
+        }
+    }
+}
+bool chercherUnObjetBis(Liste* li, Objet* objetCherche)
+{
+    bool trouve = faux;
+    Objet* objet; // pointeur courant
+    ouvrirListe(li);
+    while (!finListe(li) && !trouve) {
+        objet = objetCourant(li);
+        trouve = li->comparer(objetCherche, objet) == 0;
+    }
+    return trouve;
+}
+static int comparerCar(Objet* objet1, Objet* objet2)
+{
+    return strcmp((char*)objet1, (char*)objet2);
+}
+
+static char* toChar(Objet* objet)
+{
+    return (char*)objet;
+}
+
+Liste* DcreerListe(int type)
+{
+    return creerListe(type, toChar, comparerCar);
+}
+
+
+//typedef char NomS[50];
+static NomSom *path = NULL;
+static int *cout = NULL;
+
+void initialiserTableaux() {
+    path = (NomSom *) malloc(sizeof(NomSom) * 100);
+    cout = (int *) malloc(sizeof(int) * 100);
+    if (path == NULL || cout == NULL) {
+        printf("erreur du path et du cout ");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void libererTableaux() {
+    free(path);
+    free(cout);
+}
+static void coutUniforme(GrapheMat *graphe, Liste *li, int numSommet, int but) {
+
+    for (int j = 0; j < 100; j++) {
+        strcpy(*(path + j), "");
+    }
+
+    strcpy(*(path + numSommet), graphe->nomS[numSommet]);
+    int nMax = graphe->nMax;
+    Element *extraite = NULL;
+
+    DinsererEnFinDeListe(li, graphe->nomS[numSommet], cout + numSommet);
+    graphe->marque[numSommet] = true;
+
+    while (!listeVide(li) && !trouve) {
+
+        extraite = (Element *) extraireEnTeteDeListe(li);
+        noeudsVisite++;
+        numSommet = rang(graphe, (char *) extraite);
+
+        if (numSommet == but) {
+            trouve = true;
+            return;
+        }
+
+        for (int i = 0; i < graphe->n; i++) {
+
+            if ((graphe->element[numSommet * nMax + i] == vrai)
+                && !graphe->marque[i]) {
+
+                strcat(*(path + i), *(path + numSommet));
+                strcat(*(path + i), "->");
+                strcat(*(path + i), graphe->nomS[i]);
+
+                *(cout + i) = graphe->valeur[numSommet * nMax + i] + *(cout + numSommet);
+
+                DinsererEnOrdre(li, graphe->nomS[i], cout + i);
+
+                graphe->marque[i] = vrai;
+            } else {
+                bool trouvee = chercherUnObjetBis(li, graphe->nomS[i]);
+                if ((graphe->element[numSommet * nMax + i] == vrai) && trouvee &&
+                    *(cout + i) > graphe->valeur[numSommet * nMax + i] + *(cout + numSommet)) {
+                    *(cout + i) = graphe->valeur[numSommet * nMax + i] + *(cout + numSommet);
+                    strcpy(*(path + i), "");
+                    strcat(*(path + i), *(path + numSommet));
+                    strcat(*(path + i), "->");
+                    strcat(*(path + i), graphe->nomS[i]);
+                }
+            }
+        }
+    }
+}
+
+void parcoursCoutUniforme(GrapheMat *graphe) {
+
+
+    int but;
+    printf("Entrez le numero du sommet but :");
+    scanf("%d", &but);
+    Liste *li = DcreerListe(1);
+    razMarque(graphe);
+    for (int j = 0; j < graphe->n; j++) {
+        *(cout + j) = 0;
+    }
+
+    for (int i = 0; i < graphe->n; i++) {
+        if (!graphe->marque[i]) {
+            *(cout + i) = 0;
+            coutUniforme(graphe, li, i, but);
+        }
+
+        break;
+    }
+
+    if (trouve) {
+        printf("Le plus court  chemin vers le noeud   %s   :", graphe->nomS[but]);
+        printf("%s\n", *(path + but));
+        printf("Le cout de ce chemin :  %d ", *(cout + but));
+        trouve = false;
+    } else {
+        printf("\nNoeud INTROUVABLE");
+    }
+
+    printf("\nNoeuds visites : %d", noeudsVisite);
+    noeudsVisite = 0;
+}
+
 int menu () {
 
   printf ("\n\nGRAPHES avec matrices\n\n");
@@ -741,6 +934,7 @@ int menu () {
   printf ("9   -  exploration en largeur d'abord \n");
   printf ("10  -  exploration en profendeur d'abord limitee\n");
   printf ("11  -  Exploration iterative en profondeur\n");
+  printf ("12  -  Exploration cout uniforme\n");
   printf ("\n");
   printf ("Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -824,6 +1018,12 @@ int main () {
     case 11:
         printf("Exploration iterative en profondeur");
         parcoursIterativeEnprofendeur(graphe);
+        break;
+    case 12:
+        initialiserTableaux();
+        printf("Exploration cout uniforme");
+        parcoursCoutUniforme(graphe);
+        libererTableaux();
         break;
 
 

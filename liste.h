@@ -11,6 +11,7 @@ typedef void Objet;
 typedef struct element {
   Objet*          reference;
   struct element* suivant;
+  Objet* priority;
 } Element;
 
 typedef struct {
@@ -45,5 +46,10 @@ Objet*   chercherUnObjet        (Liste* li, Objet* objetCherche);
 void     detruireListe          (Liste* li);
 
 void     insererEnOrdre         (Liste* li, Objet* objet);
+
+//surcharge des fonction init
+
+//void insererEnFinDeListe(Liste* li, Objet* objet, Objet* priority);
+//void insererEnOrdre(Liste* li, Objet* objet, Objet* priority);
 
 

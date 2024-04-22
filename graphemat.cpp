@@ -3,14 +3,15 @@
 #include <string.h>
 #include "graphemat.h"
 
-
+static bool trouve = false;
+static int noeudsVisite = 0;
 booleen  grapheDetruit = vrai;
 
 // remise a zero du tableau de marquage
-static void initMarque (GrapheMat* graphe)
-{
-
-    for (int i=0; i<graphe->n; i++) graphe->marque [i] = faux;
+static void razMarque(GrapheMat* graphe){
+    for(int i=0;i<graphe->n;i++){
+        graphe->marque[i]=faux;
+    }
 }
 
 GrapheMat* creerGrapheMat (int nMax, int value)
@@ -33,7 +34,7 @@ GrapheMat* creerGrapheMat (int nMax, int value)
             graphe->valeur  [i*nMax+j] = INFINI;
         }
     }
-    initMarque (graphe);
+    razMarque (graphe);
     grapheDetruit = faux;
     return graphe;
 }
@@ -184,7 +185,50 @@ void floyd (GrapheMat* graphe)
         ecrireEtape(a,p,k,graphe->n,nMax);
 }}
 
+static void profondeur(GrapheMat *graphe, int numSommet, char but[]) {
 
+    if (!trouve) {
+        int nMax = graphe->nMax;
+        graphe->marque[numSommet] = vrai;
+        printf("->%s", graphe->nomS[numSommet]);
+        noeudsVisite++;
+        for (int i = 0; i < graphe->n; i++) {
+            if ((graphe->element[numSommet * nMax + i] == vrai)
+                && !graphe->marque[i] && !trouve) {
+                if (strcmp(graphe->nomS[i], but) == 0) {
+
+                    printf("->%s (Noeud but) ", but);
+                    trouve = true;
+                }
+                profondeur(graphe, i, but);
+            }
+        }
+    }
+}
+void parcoursProfond(GrapheMat *graphe) {
+
+    razMarque(graphe);
+    char str[20];
+    printf("Tapez le sommet objectif(but) :");
+    scanf("%s", str);
+    printf("Chemin suivi par le parcous :   ");
+
+
+
+    for (int i = 0; i < graphe->n; i++) {
+        if (!graphe->marque[i])
+            profondeur(graphe, i, str);
+    }
+    if (!trouve) {
+
+        printf("\nLe noeud %s est INTROUVABLE", str);
+    }
+
+    printf("\nLa liste des neoueds visites : %d", noeudsVisite);
+    noeudsVisite = 0;
+}
+
+/*
 static void profondeur (GrapheMat* graphe, int numSommet)
 {
     int nMax = graphe->nMax;
@@ -210,7 +254,7 @@ void parcoursProfond (GrapheMat* graphe)
     }
 }
 
-
+*/
 
 ////********************************************* includde le fichier liste
 typedef int  booleen;
@@ -439,12 +483,7 @@ static Element* elementCourant (Liste* li) {
   return ptc;
 }
 //TP1
-static int noeudsVisite=0;
-static void razMarque(GrapheMat* graphe){
-    for(int i=0;i<graphe->n;i++){
-        graphe->marque[i]=faux;
-    }
-}
+
 //********************* fin include fichier liste
 
 //TP1
@@ -501,7 +540,6 @@ void parcoursLargeurD(GrapheMat* graphe){
 }
 
 // profendeur limite
-static booleen trouve =false;
 static void profendeurLimite(GrapheMat* graphe ,int k,char but[],int limite){
 
 if(!trouve){

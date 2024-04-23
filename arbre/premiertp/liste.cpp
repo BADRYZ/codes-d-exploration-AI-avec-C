@@ -16,6 +16,7 @@ static Element* elementCourant  (Liste* li);
 void initListe (Liste* li, int type, char* (*afficher) (Objet*),int (*comparer) (Objet*, Objet*)) {
   li->premier  = NULL;
   li->dernier  = NULL;
+  li->dernier  = NULL;
   li->courant  = NULL;
   li->nbElt    = 0;
   li->type     = type;

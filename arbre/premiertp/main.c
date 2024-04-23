@@ -4,6 +4,8 @@
 #include <string.h>
 #include "arbre.h"
 #include "liste.h"
+
+
 Noeud* TtrouverNoeud (Noeud* racine, Objet* objet,
                             int (*comparer) (Objet*, Objet*))
 {
@@ -119,8 +121,107 @@ Noeud* CcF (char* message)
 {
     return CcF ( (Objet*) message);
 }
+static Element* creerElement () {
+  return (Element*) malloc (sizeof (Element));
+  //return new Element();
+}
+void insererEnTeteDeListe (Liste* li, Objet* objet) {
+  Element* nouveau   = creerElement();
+  nouveau->reference = objet;
+  nouveau->suivant   = li->premier;
+  li->premier        = nouveau;
+  if (li->dernier == NULL) {li->dernier = nouveau;}
+  li->nbElt++;
+}
 
+static void insererApres (Liste* li, Element* precedent, Objet* objet) {
+  if (precedent == NULL) {
+    insererEnTeteDeListe (li, objet);
+  } else {
+    Element* nouveau   = creerElement();
+    nouveau->reference = objet;
+    nouveau->suivant   = precedent->suivant;
+    precedent->suivant = nouveau;
+    if (precedent == li->dernier) li->dernier = nouveau;
+    li->nbElt++;
+  }
+}
+void insererEnFinDeListe (Liste* li,  Objet* objet) {
+  insererApres (li, li->dernier, objet);
+}
+void initListe (Liste* li, int type, char* (*afficher) (Objet*),int (*comparer) (Objet*, Objet*)) {
+  li->premier  = NULL;
+  li->dernier  = NULL;
+  li->dernier  = NULL;
+  li->courant  = NULL;
+  li->nbElt    = 0;
+  li->type     = type;
+  li->afficher = afficher;
+  li->comparer = comparer;
+}
+Liste* creerListe (int type, char* (*afficher) (Objet*), int (*comparer) (Objet*, Objet*)) {
+  Liste* li = (Liste*) malloc (sizeof (Liste));
+  initListe (li, type, afficher, comparer);
+  return li;
+}
+void ouvrirListe (Liste* li) {
+  li->courant = li->premier;
+}
+static Element* elementCourant (Liste* li) {
+  Element* ptc = li->courant;
+  if (li->courant != NULL) {
+    li->courant = li->courant->suivant;
+  }
+  return ptc;
+}
 
+Objet* objetCourant (Liste* li) {
+  Element* ptc = elementCourant (li);
+  return ptc==NULL ? NULL : ptc->reference;
+}
+booleen finListe (Liste* li) {
+  return li->courant==NULL;
+}
+
+void listerListe (Liste* li) {
+  ouvrirListe (li);
+  while (!finListe (li)) {
+    Objet* objet = objetCourant (li);
+    printf ("%s ", li->afficher (objet));
+  }
+}
+booleen  listeVide (Liste* li) {
+  return li->nbElt == 0;
+}
+Objet* extraireEnTeteDeListe (Liste* li) {
+  Element* extrait = li->premier;
+  if (!listeVide(li)) {
+    li->premier = li->premier->suivant;
+    if (li->premier==NULL) {li->dernier=NULL;}
+    li->nbElt--;
+  }
+  return extrait != NULL ? extrait->reference : NULL;
+}
+
+void EnLargeur (Noeud* racine, char* (*afficher) (Objet*))
+{
+    Liste* li = creerListe(0, afficher, NULL);;
+    insererEnFinDeListe (li, racine);
+    while (!listeVide (li) )
+    {
+        Noeud* extrait = (Noeud*) extraireEnTeteDeListe (li);
+        printf ("%s ", afficher (extrait->reference));
+        if (extrait->gauche != NULL) {insererEnFinDeListe (li,
+                    extrait->gauche);}
+        if (extrait->droite != NULL) {insererEnFinDeListe (li,
+                    extrait->droite);}
+    }
+}
+
+void enLargeur (Arbre* arbre)
+{
+    EnLargeur (arbre->racine, arbre->afficher);
+}
 ////////////////////
 char* afficherString (Objet* objet)
 {
@@ -147,6 +248,117 @@ Arbre* creerArbreGene ()
               NULL
             );
     return creerArbre (racine, afficherString, comparerString);
+}
+int Taille (Noeud* racine)
+{
+    if (racine == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + Taille (racine->gauche) + Taille (racine->droite);
+    }
+}
+
+int taille (Arbre* arbre)
+{
+    return Taille (arbre->racine);
+}
+booleen estFeuille (Noeud* racine)
+{
+    return (racine->gauche==NULL) && (racine->droite==NULL);
+}
+int NbFeuilles (Noeud* racine)
+{
+    if (racine == NULL)
+    {
+        return 0;
+    }
+    else if ( estFeuille (racine) )
+    {
+        return 1;
+    }
+    else
+    {
+        return NbFeuilles (racine->gauche) + NbFeuilles (racine->droite);
+    }
+}
+
+int nbFeuilles (Arbre* arbre)
+{
+    return NbFeuilles (arbre->racine);
+}
+
+void ListerFeuilles (Noeud* racine, char* (*afficher) (Objet*))
+{
+    if (racine != NULL)
+    {
+        if (estFeuille (racine))
+        {
+            printf ("%s ", afficher (racine->reference));
+        }
+        else
+        {
+            ListerFeuilles (racine->gauche, afficher);
+            ListerFeuilles (racine->droite, afficher);
+        }
+    }
+}
+
+void listerFeuilles (Arbre* arbre)
+{
+    ListerFeuilles (arbre->racine, arbre->afficher);
+}
+int max (int a, int b)
+{
+    return (a<b)?b:a;
+}
+
+int Hauteur (Noeud* racine)
+{
+    if (racine == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1 + max (Hauteur (racine->gauche),
+                        Hauteur (racine->droite) );
+    }
+}
+
+int hauteur (Arbre* arbre)
+{
+    return Hauteur (arbre->racine);
+}
+
+booleen EgaliteArbre (Noeud* racine1, Noeud* racine2,
+                             int (*comparer) (Objet*, Objet*))
+{
+    booleen resu = faux;
+    if ( (racine1==NULL) && (racine2==NULL) )
+    {
+        resu = vrai;
+    }
+    else if ( (racine1!=NULL) && (racine2!=NULL) )
+    {
+        if (comparer (racine1->reference, racine2->reference) == 0)
+        {
+            if (EgaliteArbre (racine1->gauche, racine2->gauche, comparer) )
+            {
+                resu = EgaliteArbre (racine1->droite, racine2->droite, comparer);
+            }
+        }
+    }
+    return resu;
+}
+
+
+
+booleen egaliteArbre (Arbre* arbre1, Arbre* arbre2)
+{
+    return EgaliteArbre (arbre1->racine, arbre2->racine, arbre1->comparer);
 }
 
 

@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1713902070 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\premiertp\main.c
+1713956486 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\premiertp\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdio.h>
+	<string.h>
 	<string.h>
 	"arbre.h"
 	"liste.h"

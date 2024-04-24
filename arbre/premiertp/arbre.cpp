@@ -265,4 +265,53 @@ booleen egaliteArbre (Noeud* racine1, Noeud* racine2,
 booleen egaliteArbre (Arbre* arbre1, Arbre* arbre2)
 {
     return egaliteArbre (arbre1->racine, arbre2->racine, arbre1->comparer);
+
+
 }
+
+static char* toChar (Objet* objet)
+{
+    return (char*) objet;
+}
+static int noeudExplore=0;
+static void enLargeurDabord (Noeud* racine, char* (*afficher) (Objet*), char but[])
+{
+    Liste* li = creerListe();
+    insererEnFinDeListe (li, racine);
+    while (!listeVide (li) )
+    {
+        Noeud* extrait = (Noeud*) extraireEnTeteDeListe (li);
+        noeudExplore++;
+        if(strcmp((char*)extrait->reference,but)==0){
+            printf("\n=> Le but est trouve: %s ",but);
+            return;
+        }
+        printf("%s ",toString(extrait->reference));
+        if (extrait->gauche != NULL)
+            insererEnFinDeListe (li,extrait->gauche);
+        if (extrait->droite != NULL)
+            insererEnFinDeListe (li,extrait->droite);
+    }
+    printf("\n=> le but %s est introuvable ",but);
+}
+static int noeudDevelopee=0;
+void parcoursEnLargeur(Arbre* arbre){
+    char but[20];
+
+    printf("\n=> entrez le but: ");
+    scanf("%s",but);
+    printf("=> le chemin du recherche: ");
+
+    enLargeurDabord(arbre->racine,arbre->afficher,but);
+    printf("\n=> Le nombre de noeuds Explores : %d",noeudExplore);
+    noeudDevelopee=noeudExplore-1;
+    noeudExplore=0;
+    printf("\n=> Le nombre de noeuds Developees : %d",noeudDevelopee);
+    noeudDevelopee=0;
+}
+
+//profondeur
+
+
+//profendeur limite
+

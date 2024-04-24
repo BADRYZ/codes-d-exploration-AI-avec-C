@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <string.h>
 #include "arbre.h"
 #include "liste.h"
 
@@ -361,6 +362,55 @@ booleen egaliteArbre (Arbre* arbre1, Arbre* arbre2)
     return EgaliteArbre (arbre1->racine, arbre2->racine, arbre1->comparer);
 }
 
+static char* toChar (Objet* objet)
+{
+    return (char*) objet;
+}
+static int comparerCar(Objet* objet1, Objet* objet2)
+{
+    return strcmp((char*)objet1, (char*)objet2);
+}
+Liste* creerListeVideAr()
+{
+    return creerListe(NONORDONNE, toChar, comparerCar);
+}
+int noeudExplore=0;
+static void EnLargeurDabord (Noeud* racine, char* (*afficher) (Objet*), char but[])
+{
+    Liste* li = creerListeVideAr();
+    insererEnFinDeListe (li, racine);
+    while (!listeVide (li) )
+    {
+        Noeud* extrait = (Noeud*) extraireEnTeteDeListe (li);
+        noeudExplore++;
+        if(strcmp((char*)extrait->reference,but)==0){
+            printf("\n=> Le but est trouve: %s ",but);
+            return;
+        }
+        printf("%s ",afficher(extrait->reference));
+        if (extrait->gauche != NULL)
+            insererEnFinDeListe (li,extrait->gauche);
+        if (extrait->droite != NULL)
+            insererEnFinDeListe (li,extrait->droite);
+    }
+    printf("\n=> le but %s est introuvable ",but);
+}
+static int noeudDevelopee=0;
+void parcoursEnLargeur(Arbre* arbre){
+    char but[20];
+
+    printf("\n=> entrez le but: ");
+    scanf("%s",but);
+    printf("=> le chemin du recherche: ");
+
+    EnLargeurDabord(arbre->racine,arbre->afficher,but);
+    printf("\n=> Le nombre de noeuds Explores : %d",noeudExplore);
+    noeudDevelopee=noeudExplore-1;
+    noeudExplore=0;
+    printf("\n=> Le nombre de noeuds Developees : %d",noeudDevelopee);
+    noeudDevelopee=0;
+}
+
 
 int menu (Arbre* arbre) {
   printf ("\n\n ARBRES BINAIRES \n\n");
@@ -380,6 +430,9 @@ int menu (Arbre* arbre) {
   printf ("11 - liste des feuilles\n");
   printf ("12 - Hauteur de l'arbre \n");
   printf ("13 - egalite entre deux arbres\n");
+  printf ("14 - exploration en largeur d'abrd\n");
+  //printf ("15 - exploration en profendeur d'abrd\n");
+  //printf ("16 - exploration en profendeur limite \n");
 
   fprintf (stderr, "Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -387,7 +440,7 @@ int menu (Arbre* arbre) {
   return cod;
 }
 
-
+/*
 int main () {
   Arbre* arbre ;
   booleen fini = faux;
@@ -400,6 +453,7 @@ int main () {
     case 2:
       printf ("Creation de l'arbre genealogique\n");
       arbre = creerArbreGene();
+      printf ("Creation de l'arbre genealogique\n");
       break;
     case 3: {
       printf ("Parcours prefixe\n");
@@ -452,11 +506,101 @@ int main () {
         else
             printf("Les arbres testés ne sont pas égaux");
 
-        break;
+        }break;
+     case 14:
+      parcoursEnLargeur (arbre);
+      break;
     }  // switch
     if (!fini) {
       printf ("\n\nTaper Return pour continuer\n"); getchar();
     }
   } // while
   return 0;
-}}
+}*/
+int main() {
+    Arbre* arbre = NULL;
+    booleen fini = faux;
+
+    while (!fini) {
+        switch (menu(arbre)) {
+            case 1:
+                fini = vrai;
+                break;
+            case 2:
+                printf("Creation de l'arbre genealogique\n");
+                arbre = creerArbreGene();
+                printf("creer ArbreGene bien\n");
+                break;
+            case 3:
+                printf("Parcours prefixe\n");
+                OOprefixe(arbre);
+                break;
+            case 4:
+                printf("Parcours infixe\n");
+                infixe(arbre);
+                break;
+            case 5:
+                printf("Parcours postfixe\n");
+                postfixe(arbre);
+                break;
+            case 6: {
+                printf("Entez un nom\n");
+                char nom[20];
+                scanf("%s", nom);
+                if (trouverNoeud(arbre, nom))
+                    printf("le nom est dans l'arbre");
+                else
+                    printf("le nom n'est pas dans l'arbre");
+                break;
+            }
+            case 7:
+                printf("Parcours en largeur\n");
+                enLargeur(arbre);
+                break;
+            case 8:
+                printf("La taille de l'arbre est : %d \n", taille(arbre));
+                break;
+            case 9:
+                if (estFeuille(arbre))
+                    printf("Le noeud testé est une feuille\n");
+                else
+                    printf("Le noeud testé n'est pas une feuille\n");
+                break;
+            case 10:
+                printf("Le nombre des feuilles est : %d \n", nbFeuilles(arbre));
+                break;
+            case 11:
+                listerFeuilles(arbre);
+                break;
+            case 12:
+                printf("La hauteur de l'arbre est : %d \n", hauteur(arbre));
+                break;
+            case 13: {
+                Arbre* arbre2 = creerArbreGene();
+
+                if (egaliteArbre(arbre, arbre2))
+                    printf("Les arbres testés sont égaux");
+                else
+                    printf("Les arbres testés ne sont pas égaux");
+
+                break;
+            }
+            case 14:
+                parcoursEnLargeur(arbre);
+                break;
+            case 15:
+                //parcoursEnLargeur(arbre);
+                break;
+            case 16:
+                //parcoursEnLargeur(arbre);
+                break;
+        }
+
+        if (!fini) {
+            printf("\n\nTaper Return pour continuer\n");
+            getchar();
+        }
+    }
+
+    return 0;
+}

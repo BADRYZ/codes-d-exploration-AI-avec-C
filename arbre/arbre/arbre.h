@@ -45,3 +45,4 @@ booleen  egaliteArbre         (Arbre* arbre1, Arbre* arbre2);
 
 //tp1
 void parcoursEnProfondeurLimite(Arbre* arbre);
+void parcoursEnProfondeurIterative(Arbre* arbre);

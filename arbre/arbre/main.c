@@ -353,6 +353,7 @@ Objet* extraireEnFinDeListe (Liste* li) {
   return extrait;
 }
 
+
 //TP1
 static void EnProfondeurLimitee(Noeud* racine,char* (*afficher)(Objet*),char but[],int limite){
 Liste* li=creerListe(1,NULL,NULL);
@@ -404,6 +405,31 @@ noeudExplore=0;
 trouve=false;
 
 }
+
+//iterative en prof
+void parcoursEnProfondeurIterative(Arbre* arbre){
+    char but[20];
+    int limite=0;
+    printf("\n => entrer le but :");
+    scanf("%s",but);
+    printf("\n => entrer la limite :");
+    scanf("%d",&limite);
+    printf("\n => le chemin du recherche  :");
+    for(int i=0;i<limite;i++){
+        EnProfondeurLimitee(arbre->racine,arbre->afficher,but,i);
+    }
+    if(!trouve){
+        trouve=false;
+        printf("\n => le but %s est introuvable",but);
+    }
+    printf("\n le nombre de noeuds explores :%d",noeudExplore);
+    noeudDevelopee=noeudExplore-1;
+    printf("\n le nombre de noeuds developees :%d",noeudDevelopee);
+    noeudDevelopee=0;
+    noeudExplore=0;
+    trouve=false;
+}
+
 
 
 
@@ -474,6 +500,7 @@ int menu (Arbre* arbre) {
   printf ("\n");
 
   printf ("14 - parcours en profendeur limitee\n");
+  printf ("15 - parcours en profendeur iterative \n");
 
 
 
@@ -555,6 +582,11 @@ int main() {
             case 14:
                 printf("Parcours en profendeur limitee\n");
                 parcoursEnProfondeurLimite(arbre);
+                break;
+
+            case 15:
+                printf("Parcours en profendeur iterative\n");
+                parcoursEnProfondeurIterative(arbre);
                 break;
 
 

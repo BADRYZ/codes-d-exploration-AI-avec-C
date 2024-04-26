@@ -323,4 +323,26 @@ trouve=false;
 }
 
 //iterative en prof
+void parcoursEnProfondeurIterative(Arbre* arbre){
+    char but[20];
+    int limite=0;
+    printf("\n => entrer le but :");
+    scanf("%s",but);
+    printf("\n => entrer la limite :");
+    scanf("%d",&limite);
+    printf("\n => le chemin du recherche  :");
+    for(int i=0;i<limite;i++){
+        EnProfondeurLimitee(arbre->racine,arbre->afficher,but,i);
+    }
+    if(!trouve){
+        trouve=false;
+        printf("\n => le but %s est introuvable",but);
+    }
+    printf("\n le nombre de noeuds explores :%d",noeudExplore);
+    noeudDevelopee=noeudExplore-1;
+    printf("\n le nombre de noeuds developees :%d",noeudDevelopee);
+    noeudDevelopee=0;
+    noeudExplore=0;
+    trouve=false;
+}
 

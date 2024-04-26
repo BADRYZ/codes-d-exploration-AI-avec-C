@@ -755,6 +755,9 @@ typedef char NomS[50];
 
 static NomS *path = (NomS *) malloc((sizeof(NomS)) * 100);
 static int *cout = (int *) malloc(sizeof(int) * 100);
+
+
+
 static void coutUniforme(GrapheMat *graphe, Liste *li, int numSommet, int but) {
 
     for (int j = 0; j < 100; j++) {

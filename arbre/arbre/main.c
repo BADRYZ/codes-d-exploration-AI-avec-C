@@ -2,33 +2,43 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "arbre.h"
-
+static bool trouve=false;
+static int noeudExplore=0;
+static int noeudDevelopee=0;
 //
-//
-Noeud* cNd (Objet* objet, Noeud* gauche, Noeud* droite)
+Noeud* creerNoeudAvecEnfants(Objet* objet, Noeud* gauche, Noeud* droite)
 {
-    Noeud* nouveau     = (Noeud*)malloc(sizeof(Noeud));
+    Noeud* nouveau     = (Noeud*) malloc(sizeof(Noeud));
     nouveau->reference = objet;
     nouveau->gauche    = gauche;
     nouveau->droite    = droite;
     return nouveau;
 }
 
-Noeud* cNd2 (Objet* objet)
+Noeud* creerNoeudSeul(Objet* objet)
 {
-    return cNd (objet, NULL, NULL);
+    return creerNoeudAvecEnfants(objet, NULL, NULL);
 }
 
-Noeud* cF (Objet* objet)
+Noeud* creerFeuille(Objet* objet)
 {
-    return cNd (objet, NULL, NULL);
+    return creerNoeudSeul(objet);
 }
 
-Noeud* MessagecF (char* message)
+Noeud* creerFeuilleAvecMessage(char* message)
 {
-    return cF ( (Objet*) message);
+    return creerFeuille((Objet*)(message));
 }
+
+Noeud* creerNoeudAvecMessageEtEnfants(char* message, Noeud* gauche, Noeud* droite)
+{
+    return creerNoeudAvecEnfants((Objet*)(message), gauche, droite);
+}
+
+//
+
 void initArbre (Arbre* arbre, Noeud* racine,
        char* (*afficher) (Objet*), int (*comparer) (Objet*, Objet*))
 {
@@ -314,7 +324,86 @@ booleen egaliteArbre (Arbre* arbre1, Arbre* arbre2)
 {
     return EgaliteArbre (arbre1->racine, arbre2->racine, arbre1->comparer);
 }
+static Objet* extraireApres (Liste* li, Element* precedent) {
+  if (precedent == NULL) {
+    return extraireEnTeteDeListe (li);
+  } else {
+    Element* extrait = precedent->suivant;
+    if (extrait != NULL) {
+      precedent->suivant = extrait->suivant;
+      if (extrait == li->dernier) li->dernier = precedent;
+      li->nbElt--;
+    }
+    return extrait != NULL ? extrait->reference : NULL;
+  }
+}
 
+
+Objet* extraireEnFinDeListe (Liste* li) {
+  Objet* extrait;
+  if (listeVide(li)) {
+    extrait = NULL;
+  } else if (li->premier == li->dernier) {
+    extrait = extraireEnTeteDeListe (li);
+  } else {
+    Element* ptc = li->premier;
+    while (ptc->suivant != li->dernier) ptc = ptc->suivant;
+    extrait = extraireApres (li, ptc);
+  }
+  return extrait;
+}
+
+//TP1
+static void EnProfondeurLimitee(Noeud* racine,char* (*afficher)(Objet*),char but[],int limite){
+Liste* li=creerListe(1,NULL,NULL);
+insererEnTeteDeListe(li,racine);
+if(!trouve){
+    if(racine!=NULL){
+        Noeud* extrait=(Noeud* ) extraireEnFinDeListe(li);
+        noeudExplore++;
+        if(strcmp((char*)extrait->reference,but)==0){
+            printf("\n => le but  est trouve:%S",but);
+            trouve=true;
+
+        }else if(limite==0){
+            printf("%s",afficher(extrait->reference));
+        }
+        else{
+            if(limite>0){
+                printf("%s",afficher(extrait->reference));
+                EnProfondeurLimitee(extrait->gauche,afficher,but,limite-1);
+                EnProfondeurLimitee(extrait->droite,afficher,but,limite-1);
+            }
+        }
+
+    }
+}
+
+
+}
+
+
+void parcoursEnProfondeurLimite(Arbre* arbre){
+char but[20];
+int limite=0;
+printf("\n => entrer le but :");
+scanf("%s",but);
+printf("\n => entrer la limite :");
+scanf("%d",&limite);
+printf("\n => le chemin du recherche  :");
+EnProfondeurLimitee(arbre->racine,arbre->afficher,but,limite);
+if(!trouve){
+    trouve=false;
+    printf("\n le but %s est introuvable",but);
+}
+printf("\n le nombre de noeuds explores :%d",noeudExplore);
+noeudDevelopee=noeudExplore-1;
+printf("\n le nombre de noeuds developees :%d",noeudDevelopee);
+noeudDevelopee=0;
+noeudExplore=0;
+trouve=false;
+
+}
 
 
 
@@ -331,7 +420,7 @@ int comparerString (Objet* objet1, Objet* objet2)
 }
 
 
-Arbre* creerArbreGene ()
+/*Arbre* creerArbreGene ()
 {
     Noeud* racine =
         cNd ( "Samir",
@@ -345,7 +434,23 @@ Arbre* creerArbreGene ()
               NULL
             );
     return creerArbre (racine, afficherString, comparerString);
+}*/
+Arbre* creerArbreGene()
+{
+    Noeud* racine =
+        creerNoeudAvecMessageEtEnfants("Samir",
+            creerNoeudAvecMessageEtEnfants("Kamal",
+                creerNoeudAvecMessageEtEnfants("Yassine",
+                    NULL,
+                    creerNoeudAvecMessageEtEnfants("Hind", NULL, creerFeuilleAvecMessage("Yasmine"))
+                ),
+                creerNoeudAvecMessageEtEnfants("Sarah", creerFeuilleAvecMessage("Karim"), NULL)
+            ),
+            NULL
+        );
+    return creerArbre(racine, afficherString, comparerString);
 }
+
 
 
 int menu (Arbre* arbre) {
@@ -366,6 +471,11 @@ int menu (Arbre* arbre) {
   printf ("11 - liste des feuilles\n");
   printf ("12 - Hauteur de l'arbre \n");
   printf ("13 - egalite entre deux arbres\n");
+  printf ("\n");
+
+  printf ("14 - parcours en profendeur limitee\n");
+
+
 
   fprintf (stderr, "Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -442,6 +552,11 @@ int main() {
 
                 break;
             }
+            case 14:
+                printf("Parcours en profendeur limitee\n");
+                parcoursEnProfondeurLimite(arbre);
+                break;
+
 
         }
 

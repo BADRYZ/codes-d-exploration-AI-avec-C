@@ -42,3 +42,6 @@ int      nbFeuilles           (Arbre* arbre);
 void     listerFeuilles       (Arbre* arbre);
 int      hauteur              (Arbre* arbre);
 booleen  egaliteArbre         (Arbre* arbre1, Arbre* arbre2);
+
+//tp1
+void parcoursEnProfondeurLimite(Arbre* arbre);

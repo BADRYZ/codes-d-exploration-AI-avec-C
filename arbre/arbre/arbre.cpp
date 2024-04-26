@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include "arbre.h"
 #include "liste.h"
+static bool trouve=false;
+static int noeudExplore=0;
+static int noeudDevelopee=0;
 
 booleen arbreVide (Arbre* arbre)
 {
@@ -264,3 +267,60 @@ booleen egaliteArbre (Arbre* arbre1, Arbre* arbre2)
 {
     return egaliteArbre (arbre1->racine, arbre2->racine, arbre1->comparer);
 }
+
+
+
+//TP1
+static void EnProfondeurLimitee(Noeud* racine,char* (*afficher)(Objet*),char but[],int limite){
+Liste* li=creerListe();
+insererEnTeteDeListe(li,racine);
+if(!touve){
+    if(racine!=NULL){
+        Noeud* extrait=(Noeud* ) extraireEnFinDeListe(li);
+        noeudExplore++;
+        if(strcmp((char*)extrait->reference,but)==0){
+            printf("\n => le but  est trouve:%S",but);
+            trouve=true;
+
+        }else if(limite==0){
+            printf("%s",afficher(extrait->reference));
+        }
+        else{
+            if(limite>0){
+                printf("%s",afficher(extrait->reference));
+                EnProfondeurLimitee(extrait->gauche,afficher,but,limite-1);
+                EnProfondeurLimitee(extrait->droite,afficher,but,limite-1);
+            }
+        }
+
+    }
+}
+
+
+}
+
+
+void parcoursEnProfondeurLimite(Arbre* arbre){
+char but[20];
+int limite=0;
+printf("\n => entrer le but :");
+scanf("%s",but);
+printf("\n => entrer la limite :");
+scanf("%d",&limite);
+printf("\n => le chemin du recherche  :");
+EnProfondeurLimitee(arbre->racine,arbre->afficher,but,limite);
+if(!trouve){
+    trouve=false;
+    printf("\n le but %s est introuvable",but);
+}
+printf("\n le nombre de noeuds explores :%d",noeudExplore);
+noeudDevelopee=noeudExplore-1;
+printf("\n le nombre de noeuds developees :%d",noeudDevelopee);
+noeudDevelopee=0;
+noeudExplore=0;
+trouve=false;
+
+}
+
+//iterative en prof
+

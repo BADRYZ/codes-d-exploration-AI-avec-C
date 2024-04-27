@@ -844,3 +844,122 @@ void parcoursCoutUniforme(GrapheMat *graphe) {
     printf("\nNoeuds visites : %d", noeudsVisite);
     noeudsVisite = 0;
 }
+
+// exploration en A*
+static void A (GrapheMat* graphe, Liste* li, int numSommet, char but[])
+{
+    int* fn=(int*)malloc(sizeof(int)*graphe->n);
+    for(int j=0; j<graphe->n; j++)
+    {
+        *(fn+j)=0;
+    }
+
+	//vecteur des valeurs de h
+    int* h=(int*)malloc(sizeof(int)*graphe->n);
+    *(h)=366;
+    *(h+1)=253;
+    *(h+2)=329;
+    *(h+3)=374;
+    *(h+4)=176;
+    *(h+5)=380;
+    *(h+6)=193;
+    *(h+7)=0;
+    *(h+8)=160;
+    *(h+9)=100;
+
+    for(int j=0; j<100; j++)
+    {
+        strcpy (*(path+j),"");
+    }
+    strcpy (*(path+numSommet),graphe->nomS[numSommet]);
+    int nMax = graphe->nMax;
+    Element* extraite=NULL;
+    *(fn+numSommet)=*(cout+numSommet)+h[numSommet];
+    insererEnFinDeListe (li,graphe->nomS[numSommet],fn+numSommet);
+    graphe->marque [numSommet]=vrai;
+    while (!listeVide (li)  )
+    {
+        extraite = (Element*) extraireEnTeteDeListe(li);
+
+        noeudsVisite++;
+        numSommet = rang (graphe,(char*)extraite);
+        printf("(%s,%d)\t", graphe->nomS[numSommet],fn[numSommet]);
+        if(strcmp(graphe->nomS[numSommet],but)==0)
+        {
+            trouve=vrai;
+            return;
+        }
+        for (int i=0; i<graphe->n; i++)
+        {
+            if ( (graphe->element [numSommet*nMax+i] == vrai) && !graphe->marque [i] )
+            {
+                strcat (*(path+i),*(path+numSommet));
+                strcat (*(path+i),"->");
+                strcat (*(path+i),graphe->nomS[i]);
+                *(cout+i)=graphe->valeur[numSommet*nMax+i]+*(cout+numSommet );
+                *(fn+i)=*(cout+i)+h[i];
+                insererEnOrdre(li,graphe->nomS[i],fn+i);
+                graphe->marque[i] = vrai;
+
+            }
+            else // pour le noeud deja visit� et si on trouve un autre chemin pour u acceder a ce noeud avec moins de cout
+            {
+                booleen trouvee = chercherUnObjetBis(li,graphe->nomS[i]);
+                if((graphe->element [numSommet*nMax+i] == vrai)&& trouvee &&
+				*(fn+i)>graphe->valeur[numSommet*nMax+i]+*(cout+numSommet)+*(h+i))
+                {
+                    *(cout+i)=graphe->valeur[numSommet*nMax+i]+*(cout+numSommet ); // on met le nouveau cout
+                    *(fn+i)=*(cout+i)+h[i];
+                    strcpy (*(path+i),""); //on ecrase l'ancien chemin pour mettre le nouveau
+                    strcat (*(path+i),*(path+numSommet));
+                    strcat (*(path+i),"->");
+                    strcat (*(path+i),graphe->nomS[i]);
+                    booleen flag=extraireUnObjet(li,graphe->nomS[i]);
+                    insererEnOrdre(li,graphe->nomS[i],fn+i);
+                }
+            }
+        }
+    }
+}
+/*Liste* UNSEULARGcreerListe (int type) {
+  return creerListe (type, toChar, comparerCar);
+}*/
+void AEtoile (GrapheMat* graphe )
+{
+
+    char but[20];
+    printf("=> Entrez le but: ");
+    scanf("%s", but);
+    int num=rang(graphe,but);
+    Liste* li=creerListe(1);
+    razMarque (graphe);
+    for(int j=0; j<graphe->n; j++)
+    {
+        *(cout+j)=0;
+    }
+
+    for (int i=0; i<graphe->n; i++)
+    {
+        if (!graphe->marque [i])
+        {
+            *(cout+i)=0;
+            A (graphe, li,i,but);
+        }
+        break;
+    }
+    if(trouve)
+    {
+        printf("\n\n=> Le chemin trouve vers le noeud %s: ",graphe->nomS[num]);
+        printf("%s\n",*(path+num));
+        printf("=> Le cout de ce chemin: %d ",*(cout+num));
+        trouve=faux;
+    }
+    else
+    {
+        printf("\n=> le Noeud est intouvable!");
+    }
+
+
+    printf("\n=> nombre de Noeuds visites: %d",noeudsVisite);
+    noeudsVisite=0;
+}

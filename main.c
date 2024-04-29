@@ -1191,6 +1191,54 @@ void parcoursPlusProcheVoisin(GrapheMat* graphe)
   coutTotal = 0;
 }
 
+
+float const M=0.1;
+float const THETA=0.2;
+int const NBRENTREE=4;
+int const NBRPOIDS=2;
+void modifierPoids(float w[],int d[],int x[],int e[NBRPOIDS][NBRENTREE],int i){
+    for(int j=0; j<NBRPOIDS; j++) w[j]=w[j]+M*((d[i]-x[i])*e[j][i]);
+}
+
+int calculerSortie(float w[],int e[NBRPOIDS][NBRENTREE],int i){
+    float resultat=0;
+    int resultatTemporaire;
+    for(int j=0; j<NBRPOIDS; j++) resultat+=w[j]*e[j][i];
+    resultat=resultat-THETA;
+    if(resultat>0) resultatTemporaire=1;
+    else resultatTemporaire=0;
+
+return resultatTemporaire;
+}
+#define NBRPOIDS 2
+#define NBRENTREE 4
+
+void perceptron(){
+    float w[NBRPOIDS]= {0.3,-0.1};
+    int e[NBRPOIDS][NBRENTREE]= {{0,0,1,1},{0,1,0,1}};
+    int d[NBRENTREE]= {0,0,0,1};
+    int x[NBRENTREE];
+    booleen fini=false;
+    int nbrOK=0;
+    while(!fini){
+        nbrOK=0;
+        printf("e1  e2  d      w1          w2     x    w1Final   w2Final   \n");
+        for (int i=0; i<NBRENTREE; i++){
+            x[i]=calculerSortie(w,e,i);
+            printf("%d   %d   %d   %f   %f   %d   ",e[0][i],e[1][i],d[i],w[0],w[1],x[i]);
+            if(x[i]!=d[i]) modifierPoids(w,d,x,e,i);
+            else
+                nbrOK++;
+            printf("%f  %f",w[0],w[1]);
+            if(nbrOK==4)
+                fini=true;
+            printf("\n");
+        }
+        printf("\n\n\n");
+    }
+}
+
+
 int menu () {
 
   printf ("\n\nGRAPHES avec matrices\n\n");
@@ -1221,6 +1269,10 @@ int menu () {
   printf (" ***** ESCALADE ***** \n");
   printf ("15  - Esclade + Plus proche voisin \n");
   printf ("16  - Esclade + 2-OPT \n");
+
+  printf ("\n");
+  printf (" ***** perceptron ***** \n");
+  printf ("17  - perceptron Mono ET \n");
 
   //printf ("14  -  GLOUTON \n");
   printf ("Votre choix ? ");
@@ -1336,6 +1388,10 @@ int main () {
 
     case 16:
 //        parcoursEscalade(graphe);
+        break;
+
+    case 17:
+        perceptron();
         break;
 
 

@@ -1191,10 +1191,6 @@ void parcoursPlusProcheVoisin(GrapheMat* graphe)
   coutTotal = 0;
 }
 
-
-
-
-
 int menu () {
 
   printf ("\n\nGRAPHES avec matrices\n\n");
@@ -1222,7 +1218,10 @@ int menu () {
   printf ("13  -  A STAR \n");
   printf ("14  -  GLOUTON \n");
   printf ("\n");
-  printf ("15  -  Plus proche voisin \n");
+  printf (" ***** ESCALADE ***** \n");
+  printf ("15  - Esclade + Plus proche voisin \n");
+  printf ("16  - Esclade + 2-OPT \n");
+
   //printf ("14  -  GLOUTON \n");
   printf ("Votre choix ? ");
   int cod; scanf ("%d", &cod); getchar();
@@ -1333,8 +1332,10 @@ int main () {
 
         printf("ESCLADE plus proche voisin ");
         parcoursPlusProcheVoisin(graphe);
+        break;
 
-
+    case 16:
+//        parcoursEscalade(graphe);
         break;
 
 

@@ -1124,3 +1124,143 @@ void parcoursPlusProcheVoisin(GrapheMat* graphe)
   nbEltTab = 0;
   coutTotal = 0;
 }
+
+
+//2-opt
+//escalade
+
+float coutTrajet(GrapheMat* graphe,int tab[])
+{
+    float valeurTemp=0;
+    int nMax=graphe->nMax;
+    for(int i=0; i<(graphe->n); i++)
+    {
+        valeurTemp+= graphe->valeur[tab[i]*nMax+tab[i+1]];
+    }
+    return valeurTemp;
+}
+
+static void inverserTableau(int t[],int debut,int fin)
+{
+    int temp;
+
+    for(int i=debut; i<(fin+debut+1)/2; i++)
+    {
+        temp=t[i];
+        t[i]=t[(fin+1+debut)-i-1];
+        t[(fin+1+debut)-i-1]=temp;
+    }
+
+}
+
+static void Escalade(GrapheMat* graphe, int numSommet, int tab[])
+{
+    int tabTemporaire[(graphe->n)+1];
+    int tabBut[(graphe->n)+1];
+    valeur=0;
+
+    for(int k=0; k<(graphe->n)+1; k++)
+    {
+        tabTemporaire[k]=tab[k];
+    }
+    for(int i=1; i<graphe->n; i++)
+    {
+
+        for(int j=i+1; j<graphe->n; j++)
+        {
+            if(i==1&&j==(graphe->n)-1)
+            {
+                continue;
+            }
+            printf(" Invereser %d %d\t",i,j);
+            inverserTableau(tab,i,j);
+            if(1)
+            {
+                for(int k=0; k<(graphe->n)+1; k++)
+                {
+
+                    printf("%d",tab[k]);
+                }
+
+                printf("   %f",coutTrajet(graphe,tab));
+                printf("\n");
+            }
+
+            if(coutTrajet(graphe,tabTemporaire)>coutTrajet(graphe,tab))
+            {
+                 for(int k=0; k<(graphe->n)+1; k++)
+    {
+        tabTemporaire[k]=tab[k];
+    }
+                valeur=coutTrajet(graphe,tab);
+                for(int n=0; n<(graphe->n)+1; n++)
+                {
+                    tabBut[n]=tab[n];
+                }
+
+            }
+            else
+            {
+                valeur=coutTrajet(graphe,tabTemporaire);
+                for(int n=0; n<(graphe->n)+1; n++)
+                {
+                    tabBut[n]=tabTemporaire[n];
+                }
+            }
+
+            for(int k=0; k<(graphe->n)+1; k++)
+            {
+                tab[k]=tabBut[k];
+            }
+        }
+    }
+    for(int n=0; n<(graphe->n)+1; n++)
+    {
+        tab[n]=tabBut[n];
+    }
+}
+
+void parcoursEscalade(GrapheMat* graphe)
+{
+
+int tab[(graphe->n) + 1];
+tab[0] = 0;
+tab[(graphe->n)] = 0;
+
+for (int i = 1; i < graphe->n; i++) {
+    tab[i] = i + 1;
+}
+//int tab[(graphe->n)+1];
+    razMarque(graphe);
+
+    for (int i=0; i<graphe->n; i++)
+    {
+        if(!graphe->marque[i])
+        {
+
+            float cout=coutTrajet(graphe,tab);
+            printf("***** le trajet de depart ***** :    ");
+            for(int k=0; k<(graphe->n)+1; k++)
+            {
+                printf("  A%d  ",tab[k]);
+            }
+            printf("   le cout : %f   \n",coutTrajet(graphe,tab));
+            printf("\n");
+            Escalade(graphe,i,tab);
+        }
+        break;
+    }
+   // end = clock();
+//    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+//    printf("\n ******* Le temps pris par le parcours d'escalade ******* :  %f \n",time_spent);
+    printf("\n ******* Le trajet du parcours d'escalade ******* :  \n\n");
+    for(int k=0; k<(graphe->n)+1; k++)
+    {
+        printf(" %d ",tab[k]);
+        printf("->");
+    }
+    printf("\n\n Le meilleur cout d'escalade : %f \n ",valeur);
+    valeur=0;
+    nbEltTab=0;
+    coutTotal=0;
+}

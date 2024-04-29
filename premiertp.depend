@@ -17,10 +17,11 @@
 	<string.h>
 	"graphemat.h"
 
-1714392868 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.cpp
+1714395132 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.cpp
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<math.h>
 	"graphemat.h"
 
 1713795128 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\graphemat.h

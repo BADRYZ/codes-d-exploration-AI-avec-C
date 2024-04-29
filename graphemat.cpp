@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "graphemat.h"
 
 static bool trouve = false;
@@ -1312,3 +1313,61 @@ void perceptron(){
         printf("\n\n\n");
     }
 }
+
+
+//multi
+int const NBRENTREE_MULTIPLE=2;
+int const NBR_ACTIVATION=7;
+float sigmoide(float x){ return 1/(1+exp(-x)); }
+
+void perceptronMulticouche(){
+    float w[NBR_ACTIVATION][NBR_ACTIVATION+1]= {
+        {0,0,0,0,0,0,0,0},
+        {0,0,0,0.5,-1,0,0,0},
+        {0,0,0,1.5,-2,0,0,0},
+        {0,0,0,0,0,1,-1,0},
+        {0,0,0,0,0,3,-4,0},
+        {0,0,0,0,0,0,0,1},
+        {0,0,0,0,0,0,0,-3}
+    };
+    float temp=0.0;
+    float alpha=0.1;
+    float delta[NBR_ACTIVATION+1]= {0,0,0,0,0,0,0,0};
+    float in[NBR_ACTIVATION+1]= {0,0,0,0,0,0,0,0};
+    float a[NBR_ACTIVATION+1]= {0,0,0,0,0,0,0,0};
+    float x[NBRENTREE_MULTIPLE+1]= {0,2,-1};
+    printf(" Propagation Avant \n\n");
+    do{
+        for(int i=0; i<3; i++) a[i]=x[i];
+        for( int j=3; j<=NBR_ACTIVATION; j++){
+            for( int i=0; i<NBR_ACTIVATION; i++) in[j]+=w[i][j]*a[i];
+            a[j]=sigmoide(in[j]);
+        }
+        for(int j=1; j<NBR_ACTIVATION+1; j++) printf("\ta%d  ====  %f\n",j,a[j]);
+        delta[NBR_ACTIVATION]=1-a[NBR_ACTIVATION];
+        printf("\n\n");
+        printf(" Retropropagation \n\n");
+        printf("\tDelta7  ====  %f\n",delta[NBR_ACTIVATION]);
+        for(int i=NBR_ACTIVATION-1; i>2; i--){
+            for(int j=1; j<NBR_ACTIVATION+1; j++) temp+=w[i][j]*delta[j];
+            delta[i]=sigmoide(in[i])*(1-sigmoide(in[i]))*temp;
+            printf("\tDelta%d  ====  %f\n",i,delta[i]);
+            temp=0;
+        }
+        printf("\n\n");
+        for(int i=1; i<NBR_ACTIVATION; i++){
+            for(int j=1; j<NBR_ACTIVATION+1; j++){
+                if(w[i][j]!=0) w[i][j]=w[i][j]+alpha*a[i]*delta[j];
+            }
+        }
+        for(int i=1; i<NBR_ACTIVATION; i++){
+            for(int j=1; j<NBR_ACTIVATION+1; j++){
+                if(w[i][j]!=0) printf("\tW%d%d  ====  %f\n",i,j,w[i][j]);
+            }
+        }
+        printf("\n\n");
+        if((delta[NBR_ACTIVATION]>0.1))printf("Propagation Avant \n\n");
+    }while(delta[NBR_ACTIVATION]>0.1);
+}
+
+

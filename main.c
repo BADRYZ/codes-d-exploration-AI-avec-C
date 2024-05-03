@@ -1300,41 +1300,171 @@ void perceptronMulticouche(){
     }while(delta[NBR_ACTIVATION]>0.1);
 }
 
+
+
+//escalade
+
+float coutTrajet(GrapheMat* graphe, int tab[]) {
+    float valeurTemp = 0;
+    int nMax = graphe->nMax;
+    for (int i = 0; i < (graphe->n) - 1; i++) {
+        valeurTemp += graphe->valeur[tab[i] * nMax + tab[i + 1]];
+    }
+    return valeurTemp;
+}
+
+static void inverserTableau(int t[], int debut, int fin) {
+    int temp;
+
+    for (int i = debut; i < (fin + debut + 1) / 2; i++) {
+        temp = t[i];
+        t[i] = t[(fin + 1 + debut) - i - 1];
+        t[(fin + 1 + debut) - i - 1] = temp;
+    }
+}
+
+static void Escalade(GrapheMat* graphe, int numSommet, int tab[]) {
+    int tabTemporaire[(graphe->n) + 1];
+    int tabBut[(graphe->n) + 1];
+    float valeur = 0;
+
+    for (int k = 0; k < (graphe->n) + 1; k++) {
+        tabTemporaire[k] = tab[k];
+    }
+
+    for (int i = 1; i < graphe->n; i++) {
+        for (int j = i + 1; j < graphe->n; j++) {
+            if (i == 1 && j == (graphe->n) - 1) {
+                continue;
+            }
+            printf("Inverser %d %d\t", i, j);
+            inverserTableau(tab, i, j);
+            if (1) {
+                for (int k = 0; k < (graphe->n) + 1; k++) {
+                    printf("%d", tab[k]);
+                }
+                printf("   %f", coutTrajet(graphe, tab));
+                printf("\n");
+            }
+
+            if (coutTrajet(graphe, tabTemporaire) > coutTrajet(graphe, tab)) {
+                for (int k = 0; k < (graphe->n) + 1; k++) {
+                    tabTemporaire[k] = tab[k];
+                }
+                valeur = coutTrajet(graphe, tab);
+                for (int n = 0; n < (graphe->n) + 1; n++) {
+                    tabBut[n] = tab[n];
+                }
+            } else {
+                valeur = coutTrajet(graphe, tabTemporaire);
+                for (int n = 0; n < (graphe->n) + 1; n++) {
+                    tabBut[n] = tabTemporaire[n];
+                }
+            }
+
+            for (int k = 0; k < (graphe->n) + 1; k++) {
+                tab[k] = tabBut[k];
+            }
+        }
+    }
+
+    for (int n = 0; n < (graphe->n) + 1; n++) {
+        tab[n] = tabBut[n];
+    }
+}
+void parcoursEscalade(GrapheMat* graphe) {
+    int tab[(graphe->n) + 1];
+    tab[0] = 0;
+    tab[(graphe->n)] = 0;
+
+    for (int i = 1; i < graphe->n; i++) {
+        tab[i] = i + 1;
+    }
+
+    razMarque(graphe);
+
+    for (int i = 0; i < graphe->n; i++) {
+        if (!graphe->marque[i]) {
+            float cout = coutTrajet(graphe, tab);
+            printf("***** Le trajet de départ ***** :    ");
+            for (int k = 0; k < (graphe->n) + 1; k++) {
+                printf("  A%d  ", tab[k]);
+            }
+            printf("   le cout : %f   \n", coutTrajet(graphe, tab));
+            printf("\n");
+            Escalade(graphe, i, tab);
+        }
+        break;
+    }
+
+    printf("\n ******* Le trajet du parcours d'escalade ******* :  \n\n");
+    for (int k = 0; k < (graphe->n) + 1; k++) {
+        printf(" %d ", tab[k]);
+        printf("->");
+    }
+    printf("\n\n Le meilleur cout d'escalade : %f \n ", valeur);
+    valeur = 0;
+}
 int menu () {
 
   printf ("\n\nGRAPHES avec matrices\n\n");
 
   printf ("0 - Fin du programme\n");
   printf ("1 - Creation a partir d'un fichier\n");
+
   printf ("\n");
+
   printf ("2 - Initialisation d'un graphe vide\n");
   printf ("3 - Ajout d'un sommet\n");
   printf ("4 - Ajout d'un arc\n");
+
   printf ("\n");
+
   printf ("5 - Liste des sommets et des arcs\n");
   printf ("6 - Destruction du graphe\n");
   printf ("7 - Parcours en profondeur d'un graphe\n");
+
   printf ("\n");
+
   printf ("8  - Floyd \n");
+
   printf ("\n");
+
+
   printf (" ***** EXPLORATION ***** \n");
   printf ("\n");
   printf ("9   -  exploration en largeur d'abord \n");
   printf ("10  -  exploration en profendeur d'abord limitee\n");
   printf ("11  -  Exploration iterative en profondeur\n");
   printf ("12  -  Exploration cout uniforme\n");
+
   printf ("\n");
+
+
   printf ("13  -  A STAR \n");
   printf ("14  -  GLOUTON \n");
+
   printf ("\n");
+
+
   printf (" ***** ESCALADE ***** \n");
   printf ("15  - Esclade + Plus proche voisin \n");
   printf ("16  - Esclade + 2-OPT \n");
 
   printf ("\n");
+
+
   printf (" ***** perceptron ***** \n");
   printf ("17  - perceptron Mono ET \n");
   printf ("18  - perceptron MuLTI \n");
+
+  printf ("\n");
+
+
+  printf("19 - Simule\n");
+  printf("20 - Genetique\n");
+  printf ("\n");
+
 
   //printf ("14  -  GLOUTON \n");
   printf ("Votre choix ? ");
@@ -1443,13 +1573,12 @@ int main () {
 
      case 15:
 
-
         printf("ESCLADE plus proche voisin ");
         parcoursPlusProcheVoisin(graphe);
         break;
 
     case 16:
-//        parcoursEscalade(graphe);
+        parcoursEscalade(graphe);
         break;
 
     case 17:

@@ -50,10 +50,8 @@ int main() {
     srand(time(NULL));
     GrapheMat* graphe = creerGrapheMat(7);
     initialiserGraphe(graphe);
-
     Individu population[TAILLE_POPULATION];
     randomizePopulation(population, graphe);
-
     for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
         Individu new_population[TAILLE_POPULATION];
         for (int i = 0; i < TAILLE_POPULATION; i++) {
@@ -68,17 +66,14 @@ int main() {
         }
         memcpy(population, new_population, sizeof(new_population));
     }
-
     Individu best = population[0];
     for (int i = 1; i < TAILLE_POPULATION; i++) {
         if (population[i].adaptation > best.adaptation) {
             best = population[i];
         }
     }
-
     printf("Best path after %d generations:\n", MAX_GENERATIONS);
     afficherIndividu(best, graphe);
-
     detruireGraphe(graphe);
     return 0;
 }

@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1714127867 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\arbre\main.c
+1714147924 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\arbre\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
+	<stdbool.h>
 	"arbre.h"
 
-1714127078 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\arbre\arbre.h
+1714147552 c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\arbre\arbre\arbre.h
 

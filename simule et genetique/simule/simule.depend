@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1715557892 source:c:\users\zakaria\onedrive\desktop\simuler\simule\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
+1715557892 source:c:\users\zakaria\onedrive\desktop\ensak_s8\ai\tps\tp1\code-graphe-avec-floyd\simule et genetique\simule\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+

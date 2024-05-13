@@ -560,8 +560,6 @@ while(!listeVide(li)){
     if(strcmp(*extraite,but)==0){
         printf("\n=> le but est trouver:%s:",but);
         return 1;
-
-
     }
     numSommet=rang(graphe, *extraite);
     printf("\n %s",extraite);
@@ -590,7 +588,6 @@ void parcoursLargeurD(GrapheMat* graphe){
     for(int i =0 ;i<graphe->n;i++){
         if(!graphe->marque[i]){
             trouve=largeurD(graphe,li,i,str);
-
         }
         if(trouve==1){
             break;
@@ -600,61 +597,7 @@ void parcoursLargeurD(GrapheMat* graphe){
     noeudsVisite=0;
 }
 
-// profendeur limite
-static void profendeurLimite(GrapheMat* graphe ,int k,char but[],int limite){
 
-if(!trouve){
-    noeudsVisite++;
-    int nMax=graphe->nMax;
-    if(strcasecmp(graphe->nomS[k],but)==0){
-        printf("%s",graphe->nomS[k]);
-        trouve=vrai;
-        return;
-    }
-    else if(limite<=0) {
-        printf("%s",graphe->nomS[k]);
-        graphe->marque[k]=vrai;
-        return;
-    }
-    else {
-        if(limite>0){
-            printf("%s",graphe->nomS[k]);
-            graphe->marque[k]=vrai;
-            for(int i=0;i>graphe->n;i++){
-                if((graphe->element[k*nMax+i]==vrai)&&!graphe->marque[i]&&!trouve){
-                    profendeurLimite(graphe,i,but,limite-1);
-                }
-            }
-        }
-    }
-}
-}
-void parcoursProfendeurLimite(GrapheMat* graphe){
-razMarque(graphe);
-Liste* li=creerListe(0, NULL, NULL);
-char str[20];
-printf("=> entre le but ");
-scanf("%s",str);
-int limite;
-printf("=> entre la limite ");
-scanf("%s",&limite);
-for(int i=0;i<graphe->n;i++){
-    if(!graphe->marque[i]){
-        profendeurLimite(graphe,i,str,limite);
-        break;
-    }
-
-}
-if (trouve==faux){
-    printf("\n le but est introuvable\n");
-
-}
-else {
-    printf("\n => le nombre de noeuds visites :%d",noeudsVisite);
-}
-noeudsVisite=0;
-trouve=faux;
-}
 //parcours iterative en pr
 void profondeurIteretif(GrapheMat* graphe,int numSommet,int numNiveau,char but[]){
 if(!trouve){
@@ -716,7 +659,6 @@ void parcoursIterativeEnprofendeur(GrapheMat* graphe){
     printf("\nouds visites :%d",noeudsVisite);
     noeudsVisite=0;
     trouve=false;
-
 }
 
 //**** fin include TP1
@@ -827,43 +769,34 @@ void libererTableaux() {
     free(path);
     free(cout);
 }
+
+
 static void coutUniforme(GrapheMat *graphe, Liste *li, int numSommet, int but) {
 
     for (int j = 0; j < 100; j++) {
         strcpy(*(path + j), "");
     }
-
     strcpy(*(path + numSommet), graphe->nomS[numSommet]);
     int nMax = graphe->nMax;
     Element *extraite = NULL;
-
     DinsererEnFinDeListe(li, graphe->nomS[numSommet], cout + numSommet);
     graphe->marque[numSommet] = true;
-
     while (!listeVide(li) && !trouve) {
-
         extraite = (Element *) extraireEnTeteDeListe(li);
         noeudsVisite++;
         numSommet = rang(graphe, (char *) extraite);
-
         if (numSommet == but) {
             trouve = true;
             return;
         }
-
         for (int i = 0; i < graphe->n; i++) {
-
             if ((graphe->element[numSommet * nMax + i] == vrai)
                 && !graphe->marque[i]) {
-
                 strcat(*(path + i), *(path + numSommet));
                 strcat(*(path + i), "->");
                 strcat(*(path + i), graphe->nomS[i]);
-
                 *(cout + i) = graphe->valeur[numSommet * nMax + i] + *(cout + numSommet);
-
                 DinsererEnOrdre(li, graphe->nomS[i], cout + i);
-
                 graphe->marque[i] = vrai;
             } else {
                 bool trouvee = chercherUnObjetBis(li, graphe->nomS[i]);
@@ -1006,7 +939,6 @@ void AEtoile (GrapheMat* graphe )
     {
         *(cout+j)=0;
     }
-
     for (int i=0; i<graphe->n; i++)
     {
         if (!graphe->marque [i])
@@ -1027,8 +959,6 @@ void AEtoile (GrapheMat* graphe )
     {
         printf("\n=> le Noeud est intouvable!");
     }
-
-
     printf("\n=> nombre de Noeuds visites: %d",noeudsVisite);
     noeudsVisite=0;
 }
@@ -1193,7 +1123,7 @@ void parcoursPlusProcheVoisin(GrapheMat* graphe)
   coutTotal = 0;
 }
 
-
+//mono
 float const M=0.1;
 float const THETA=0.2;
 int const NBRENTREE=4;
@@ -1244,12 +1174,8 @@ void perceptron(){
 int const NBRENTREE_MULTIPLE=2;
 int const NBR_ACTIVATION=7;
 float sigmoide(float x){ return 1/(1+exp(-x)); }
-
-
 #define NBRENTREE_MULTIPLE 2
 #define NBR_ACTIVATION 7
-
-
 void perceptronMulticouche(){
     float w[NBR_ACTIVATION][NBR_ACTIVATION+1]= {
         {0,0,0,0,0,0,0,0},
@@ -1302,7 +1228,7 @@ void perceptronMulticouche(){
 
 
 
-//escalade
+//escalade 2OPT
 
 float coutTrajet(GrapheMat* graphe, int tab[]) {
     float valeurTemp = 0;
@@ -1327,11 +1253,9 @@ static void Escalade(GrapheMat* graphe, int numSommet, int tab[]) {
     int tabTemporaire[(graphe->n) + 1];
     int tabBut[(graphe->n) + 1];
     float valeur = 0;
-
     for (int k = 0; k < (graphe->n) + 1; k++) {
         tabTemporaire[k] = tab[k];
     }
-
     for (int i = 1; i < graphe->n; i++) {
         for (int j = i + 1; j < graphe->n; j++) {
             if (i == 1 && j == (graphe->n) - 1) {
@@ -1346,7 +1270,6 @@ static void Escalade(GrapheMat* graphe, int numSommet, int tab[]) {
                 printf("   %f", coutTrajet(graphe, tab));
                 printf("\n");
             }
-
             if (coutTrajet(graphe, tabTemporaire) > coutTrajet(graphe, tab)) {
                 for (int k = 0; k < (graphe->n) + 1; k++) {
                     tabTemporaire[k] = tab[k];
@@ -1361,13 +1284,11 @@ static void Escalade(GrapheMat* graphe, int numSommet, int tab[]) {
                     tabBut[n] = tabTemporaire[n];
                 }
             }
-
             for (int k = 0; k < (graphe->n) + 1; k++) {
                 tab[k] = tabBut[k];
             }
         }
     }
-
     for (int n = 0; n < (graphe->n) + 1; n++) {
         tab[n] = tabBut[n];
     }
@@ -1405,6 +1326,16 @@ void parcoursEscalade(GrapheMat* graphe) {
     printf("\n\n Le meilleur cout d'escalade : %f \n ", valeur);
     valeur = 0;
 }
+
+
+
+
+
+
+
+
+
+
 int menu () {
 
   printf ("\n\nGRAPHES avec matrices\n\n");
@@ -1434,36 +1365,34 @@ int menu () {
   printf (" ***** EXPLORATION ***** \n");
   printf ("\n");
   printf ("9   -  exploration en largeur d'abord \n");
-  printf ("10  -  exploration en profendeur d'abord limitee\n");
-  printf ("11  -  Exploration iterative en profondeur\n");
-  printf ("12  -  Exploration cout uniforme\n");
+
+  printf ("10  -  Exploration iterative en profondeur\n");
+  printf ("11  -  Exploration cout uniforme\n");
 
   printf ("\n");
 
 
-  printf ("13  -  A STAR \n");
-  printf ("14  -  GLOUTON \n");
+  printf ("12  -  A STAR \n");
+  printf ("13  -  GLOUTON \n");
 
   printf ("\n");
 
 
   printf (" ***** ESCALADE ***** \n");
-  printf ("15  - Esclade + Plus proche voisin \n");
-  printf ("16  - Esclade + 2-OPT \n");
+  printf ("14  - Esclade + Plus proche voisin \n");
+  printf ("15  - Esclade + 2-OPT \n");
 
   printf ("\n");
 
 
   printf (" ***** perceptron ***** \n");
-  printf ("17  - perceptron Mono ET \n");
-  printf ("18  - perceptron MuLTI \n");
+  printf ("16  - perceptron Mono ET \n");
+  printf ("17  - perceptron MuLTI \n");
 
   printf ("\n");
 
 
-  printf("19 - Simule\n");
-  printf("20 - Genetique\n");
-  printf ("\n");
+
 
 
   //printf ("14  -  GLOUTON \n");
@@ -1542,52 +1471,50 @@ int main () {
         printf("exploration en largeur d'abord ");
         parcoursLargeurD(graphe);
         break;
+
     case 10:
-        printf("exploration en profendeur d'abord limitee");
-        parcoursProfendeurLimite(graphe);
-        break;
-    case 11:
         printf("Exploration iterative en profondeur");
         parcoursIterativeEnprofendeur(graphe);
         break;
-    case 12:
+    case 11:
         initialiserTableaux();
         printf("Exploration cout uniforme");
         parcoursCoutUniforme(graphe);
         libererTableaux();
         break;
 
-    case 13:
+    case 12:
         initialiserTableaux();
         printf("A SATAR ");
         AEtoile(graphe);
         libererTableaux();
         break;
 
-    case 14:
+    case 13:
         initialiserTableaux();
         printf("GLOUTON ");
         greedy(graphe);
         libererTableaux();
         break;
 
-     case 15:
+     case 14:
 
         printf("ESCLADE plus proche voisin ");
         parcoursPlusProcheVoisin(graphe);
         break;
 
-    case 16:
+    case 15:
         parcoursEscalade(graphe);
         break;
 
-    case 17:
+    case 16:
         perceptron();
         break;
 
-    case 18:
+    case 17:
         perceptronMulticouche();
         break;
+
 
 
     }   // switch

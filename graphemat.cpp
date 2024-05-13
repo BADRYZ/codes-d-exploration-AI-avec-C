@@ -542,63 +542,7 @@ void parcoursLargeurD(GrapheMat* graphe){
     noeudsVisite=0;
 }
 
-// profendeur limite
-static void profendeurLimite(GrapheMat* graphe ,int k,char but[],int limite){
 
-if(!trouve){
-    noeudsVisite++;
-    int nMax=graphe->nMax;
-    if(strcasecmp(graphe->nomS[k],but)==0){
-        printf("%s",graphe->nomS[k]);
-        trouve=vrai;
-        return;
-    }
-    else if(limite<=0) {
-        printf("%s",graphe->nomS[k]);
-        graphe->marque[k]=vrai;
-        return;
-    }
-    else {
-        if(limite>0){
-            printf("%s",graphe->nomS[k]);
-            graphe->marque[k]=vrai;
-            for(int i=0;i>graphe->n;i++){
-                if((graphe->element[k*nMax+i]==vrai)&&!graphe->marque[i]&&!trouve){
-                    profendeurLimite(graphe,i,but,limite-1);
-                }
-            }
-        }
-    }
-}
-}
-void parcoursProfendeurLimite(GrapheMat* graphe){
-razMarque(graphe);
-Liste* li=creerListe(0, NULL, NULL);
-char str[20];
-printf("=> entre le but ");
-scanf("%s",str);
-int limite;
-printf("=> entre la limite ");
-scanf("%s",&limite);
-for(int i=0;i<graphe->n;i++){
-    if(!graphe->marque[i]){
-        profendeurLimite(graphe,i,str,limite);
-        break;
-    }
-
-}
-if (trouve==faux){
-    printf("\n le but est introuvable\n");
-
-}
-else {
-    printf("\n => le nombre de noeuds visites :%d",noeudsVisite);
-}
-noeudsVisite=0;
-trouve=faux;
-
-
-}
 //parcours iterative en pr
 void profondeurIteretif(GrapheMat* graphe,int numSommet,int numNiveau,char but[]){
 if(!trouve){
@@ -1069,9 +1013,9 @@ void greedy(GrapheMat* graphe)
 
 //TP3
 #define SOMMET_INITIAL 0
- int nbEltTab=0;
- float coutTotal =0;
- float valeur=0;
+ static int nbEltTab=0;
+static  float coutTotal =0;
+static  float valeur=0;
 
 static void plusProcheVoisin (GrapheMat* graphe, int numSommet,int tab[]){
  int  nMax = graphe->nMax;
@@ -1125,148 +1069,104 @@ void parcoursPlusProcheVoisin(GrapheMat* graphe)
   nbEltTab = 0;
   coutTotal = 0;
 }
+//escalade 2OPT
 
-
-//2-opt
-//escalade
-
-float coutTrajet(GrapheMat* graphe,int tab[])
-{
-    float valeurTemp=0;
-    int nMax=graphe->nMax;
-    for(int i=0; i<(graphe->n); i++)
-    {
-        valeurTemp+= graphe->valeur[tab[i]*nMax+tab[i+1]];
+float coutTrajet(GrapheMat* graphe, int tab[]) {
+    float valeurTemp = 0;
+    int nMax = graphe->nMax;
+    for (int i = 0; i < (graphe->n) - 1; i++) {
+        valeurTemp += graphe->valeur[tab[i] * nMax + tab[i + 1]];
     }
     return valeurTemp;
 }
 
-static void inverserTableau(int t[],int debut,int fin)
-{
+static void inverserTableau(int t[], int debut, int fin) {
     int temp;
 
-    for(int i=debut; i<(fin+debut+1)/2; i++)
-    {
-        temp=t[i];
-        t[i]=t[(fin+1+debut)-i-1];
-        t[(fin+1+debut)-i-1]=temp;
+    for (int i = debut; i < (fin + debut + 1) / 2; i++) {
+        temp = t[i];
+        t[i] = t[(fin + 1 + debut) - i - 1];
+        t[(fin + 1 + debut) - i - 1] = temp;
     }
-
 }
 
-static void Escalade(GrapheMat* graphe, int numSommet, int tab[])
-{
-    int tabTemporaire[(graphe->n)+1];
-    int tabBut[(graphe->n)+1];
-    valeur=0;
-
-    for(int k=0; k<(graphe->n)+1; k++)
-    {
-        tabTemporaire[k]=tab[k];
+static void Escalade(GrapheMat* graphe, int numSommet, int tab[]) {
+    int tabTemporaire[(graphe->n) + 1];
+    int tabBut[(graphe->n) + 1];
+    float valeur = 0;
+    for (int k = 0; k < (graphe->n) + 1; k++) {
+        tabTemporaire[k] = tab[k];
     }
-    for(int i=1; i<graphe->n; i++)
-    {
-
-        for(int j=i+1; j<graphe->n; j++)
-        {
-            if(i==1&&j==(graphe->n)-1)
-            {
+    for (int i = 1; i < graphe->n; i++) {
+        for (int j = i + 1; j < graphe->n; j++) {
+            if (i == 1 && j == (graphe->n) - 1) {
                 continue;
             }
-            printf(" Invereser %d %d\t",i,j);
-            inverserTableau(tab,i,j);
-            if(1)
-            {
-                for(int k=0; k<(graphe->n)+1; k++)
-                {
-
-                    printf("%d",tab[k]);
+            printf("Inverser %d %d\t", i, j);
+            inverserTableau(tab, i, j);
+            if (1) {
+                for (int k = 0; k < (graphe->n) + 1; k++) {
+                    printf("%d", tab[k]);
                 }
-
-                printf("   %f",coutTrajet(graphe,tab));
+                printf("   %f", coutTrajet(graphe, tab));
                 printf("\n");
             }
-
-            if(coutTrajet(graphe,tabTemporaire)>coutTrajet(graphe,tab))
-            {
-                 for(int k=0; k<(graphe->n)+1; k++)
-    {
-        tabTemporaire[k]=tab[k];
-    }
-                valeur=coutTrajet(graphe,tab);
-                for(int n=0; n<(graphe->n)+1; n++)
-                {
-                    tabBut[n]=tab[n];
+            if (coutTrajet(graphe, tabTemporaire) > coutTrajet(graphe, tab)) {
+                for (int k = 0; k < (graphe->n) + 1; k++) {
+                    tabTemporaire[k] = tab[k];
                 }
-
-            }
-            else
-            {
-                valeur=coutTrajet(graphe,tabTemporaire);
-                for(int n=0; n<(graphe->n)+1; n++)
-                {
-                    tabBut[n]=tabTemporaire[n];
+                valeur = coutTrajet(graphe, tab);
+                for (int n = 0; n < (graphe->n) + 1; n++) {
+                    tabBut[n] = tab[n];
+                }
+            } else {
+                valeur = coutTrajet(graphe, tabTemporaire);
+                for (int n = 0; n < (graphe->n) + 1; n++) {
+                    tabBut[n] = tabTemporaire[n];
                 }
             }
-
-            for(int k=0; k<(graphe->n)+1; k++)
-            {
-                tab[k]=tabBut[k];
+            for (int k = 0; k < (graphe->n) + 1; k++) {
+                tab[k] = tabBut[k];
             }
         }
     }
-    for(int n=0; n<(graphe->n)+1; n++)
-    {
-        tab[n]=tabBut[n];
+    for (int n = 0; n < (graphe->n) + 1; n++) {
+        tab[n] = tabBut[n];
     }
 }
+void parcoursEscalade(GrapheMat* graphe) {
+    int tab[(graphe->n) + 1];
+    tab[0] = 0;
+    tab[(graphe->n)] = 0;
 
-void parcoursEscalade(GrapheMat* graphe)
-{
+    for (int i = 1; i < graphe->n; i++) {
+        tab[i] = i + 1;
+    }
 
-int tab[(graphe->n) + 1];
-tab[0] = 0;
-tab[(graphe->n)] = 0;
-
-for (int i = 1; i < graphe->n; i++) {
-    tab[i] = i + 1;
-}
-//int tab[(graphe->n)+1];
     razMarque(graphe);
 
-    for (int i=0; i<graphe->n; i++)
-    {
-        if(!graphe->marque[i])
-        {
-
-            float cout=coutTrajet(graphe,tab);
-            printf("***** le trajet de depart ***** :    ");
-            for(int k=0; k<(graphe->n)+1; k++)
-            {
-                printf("  A%d  ",tab[k]);
+    for (int i = 0; i < graphe->n; i++) {
+        if (!graphe->marque[i]) {
+            float cout = coutTrajet(graphe, tab);
+            printf("***** Le trajet de départ ***** :    ");
+            for (int k = 0; k < (graphe->n) + 1; k++) {
+                printf("  A%d  ", tab[k]);
             }
-            printf("   le cout : %f   \n",coutTrajet(graphe,tab));
+            printf("   le cout : %f   \n", coutTrajet(graphe, tab));
             printf("\n");
-            Escalade(graphe,i,tab);
+            Escalade(graphe, i, tab);
         }
         break;
     }
-   // end = clock();
-//    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-//    printf("\n ******* Le temps pris par le parcours d'escalade ******* :  %f \n",time_spent);
+
     printf("\n ******* Le trajet du parcours d'escalade ******* :  \n\n");
-    for(int k=0; k<(graphe->n)+1; k++)
-    {
-        printf(" %d ",tab[k]);
+    for (int k = 0; k < (graphe->n) + 1; k++) {
+        printf(" %d ", tab[k]);
         printf("->");
     }
-    printf("\n\n Le meilleur cout d'escalade : %f \n ",valeur);
-    valeur=0;
-    nbEltTab=0;
-    coutTotal=0;
+    printf("\n\n Le meilleur cout d'escalade : %f \n ", valeur);
+    valeur = 0;
 }
-
-
 //tp5 perceptron
 float const M=0.1;
 float const THETA=0.2;
@@ -1316,10 +1216,12 @@ void perceptron(){
 
 
 //multi
+//multi
 int const NBRENTREE_MULTIPLE=2;
 int const NBR_ACTIVATION=7;
 float sigmoide(float x){ return 1/(1+exp(-x)); }
-
+#define NBRENTREE_MULTIPLE 2
+#define NBR_ACTIVATION 7
 void perceptronMulticouche(){
     float w[NBR_ACTIVATION][NBR_ACTIVATION+1]= {
         {0,0,0,0,0,0,0,0},

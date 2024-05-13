@@ -37,5 +37,12 @@ void       floyd              (GrapheMat* graphe);
 //TP1
 //exploration
 void parcoursLargeurD(GrapheMat* graphe);
-void parcoursProfendeurLimite(GrapheMat* graphe);
 void parcoursIterativeEnprofendeur(GrapheMat* graphe);
+void parcoursCoutUniforme(GrapheMat *graphe);
+void parcoursProfond(GrapheMat *graphe);
+void AEtoile (GrapheMat* graphe );
+void greedy(GrapheMat* graphe);
+void parcoursPlusProcheVoisin(GrapheMat* graphe);
+void parcoursEscalade(GrapheMat* graphe);
+void perceptronMulticouche();
+void perceptron();
